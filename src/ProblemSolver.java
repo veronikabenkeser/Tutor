@@ -5,37 +5,80 @@ import java.util.List;
 
 
 public class ProblemSolver {
-	Permutations permutations;
-	Rules rules;
-	List<Integer> nodes;
+	private Permutations permutations;
+	private Rules rules;
+	private ArrayList<Integer> nodes;
 	
-	ProblemSolver(List<Integer>	nodes, Permutations permutations, Rules rules){
+	ProblemSolver(ArrayList<Integer>	nodes, Permutations permutations, Rules rules){
 		this.permutations = permutations;
 		this.rules = rules;
 		this.nodes = nodes;	
 	}
 	
-	void findSolution(){
+	/*
+	 * This method finds all the permutations that fit the rules outlined in the Rules class.
+	 */
+	public void findSolution(ArrayList<Integer> nodes){
 		while (permutations.hasPerms()) {
 			if (rules.isValid(nodes)) {
-				System.out.println(nodes);
+			    System.out.println(nodes);
+			    ArrayList<Integer> nodesHolder= new ArrayList<Integer>();
+			    nodesHolder=(ArrayList<Integer>) nodes.clone();
+			    solutionsArr.add(nodesHolder);
+				System.out.println("SOLUTIONS ARR" + solutionsArr);
 			}
 			nodes = permutations.nextPerm();
 		}
 	}
- 
+		
+	
 	
 	/*
-	 * This method takes nodes and names as its parameters and creates a hashmap where values 1 through 
-	 * nodes.length are the keys and letters listed in the Rules class are the corresponding values.
-	 * @param nodes 
-	 * @param names
-	 */
-	private void mapNumbersToLetters(int[] nodes, String[] names){
-		for (int i=0; i<names.length; i++){
-			myMap.put(nodes[i], names[i]);
+	public void mapLettersToNumbers( ArrayList<Integer>solutionsArrMBT, String[] names){
+		
+	}
+	
+	*/
+	
+	public void MBT(){
+		int k=0;
+		System.out.println("NODES SIZE " + nodes.size());
+		if (k<nodes.size()){
+			
+			if (solutionsArr.size()==1){
+				solutionsArrMBT.addAll(solutionsArr.get(0));
+			}
+			
+			for(int i=0; i <solutionsArr.size()-1 ;i++){
+				if(solutionsArr.get(i).get(k) == solutionsArr.get(i+1).get(k)){
+					System.out.println("i" + i);
+					System.out.println(solutionsArr.size()-2);
+					if(i== solutionsArr.size()-2){
+						System.out.println("TRUE");
+						//solutionsMap.put(k, letter);
+						k++;
+						if (k == nodes.size()) break;
+					}
+				} else {
+					k++;
+					i--;
+					//System.out.println("i is " + i);
+					//System.out.println("k is "+k);
+					if (k == nodes.size()) break;
+				}
+				System.out.println("SOLUTIONS MAP" + solutionsMap);
+			}
 		}
 	}
 	
+	
+	public ArrayList<Integer> getSolutionsArrMBT(){
+		return this.solutionsArrMBT;
+	}
+	
 	private HashMap<Integer, String> myMap = new HashMap<Integer, String>();
+	private ArrayList<ArrayList<Integer>> solutionsArr = new ArrayList<ArrayList<Integer>>();
+	private HashMap<Integer, String> solutionsMap = new  HashMap<Integer, String>();
+	private ArrayList<Integer>solutionsArrMBT = new ArrayList<Integer>();
+	
 }

@@ -8,14 +8,14 @@ import java.util.List;
  * how-do-i-write-a-program-to-solve-multiple-questions and https://ideone.com/wwxG0
  */
 public class Permutations {
-	 private final List<Integer> arrToTest;
+	 private final ArrayList<Integer> arrToTest;
      private boolean perms = true;
 
      public boolean hasPerms() {
          return perms;
      }
 
-     Permutations(List<Integer> arrToTest) {
+     Permutations(ArrayList<Integer> arrToTest) {
      	this.arrToTest=arrToTest;
      }
 
@@ -25,7 +25,7 @@ public class Permutations {
       * We cannot do permutations if we are working with less than 2 digits. In other words, there are 
       * no permutations we can do if the number of things in the array-2< 0.
       */
-     List<Integer> nextPerm() {
+     ArrayList<Integer> nextPerm() {
          int temp;
          int j = arrToTest.size()- 2;
          while (arrToTest.get(j)> arrToTest.get(j + 1)) {
@@ -56,6 +56,8 @@ public class Permutations {
          }
          return arrToTest;
      }
+     
+    
 
  //String[] arrS = new String[6];
  //Iterator<String> it = arr.iterator();
