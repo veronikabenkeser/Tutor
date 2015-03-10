@@ -9,7 +9,7 @@ public class ProblemSolver {
 	private Rules rules;
 	private ArrayList<Integer> nodes;
 	
-	ProblemSolver(ArrayList<Integer>	nodes, Permutations permutations, Rules rules){
+	public ProblemSolver(ArrayList<Integer>	nodes, Permutations permutations, Rules rules){
 		this.permutations = permutations;
 		this.rules = rules;
 		this.nodes = nodes;	
@@ -18,9 +18,9 @@ public class ProblemSolver {
 	/*
 	 * This method finds all the permutations that fit the rules outlined in the Rules class.
 	 */
-	public void findSolution(ArrayList<Integer> nodes){
+	private void findSolution(ArrayList<Integer> nodes){
 		while (permutations.hasPerms()) {
-			if (rules.isValid(nodes)) {
+			if (rules.getIsValid(nodes)) {
 			    System.out.println(nodes);
 			    ArrayList<Integer> nodesHolder= new ArrayList<Integer>();
 			    nodesHolder=(ArrayList<Integer>) nodes.clone();
@@ -31,16 +31,7 @@ public class ProblemSolver {
 		}
 	}
 		
-	
-	
-	/*
-	public void mapLettersToNumbers( ArrayList<Integer>solutionsArrMBT, String[] names){
-		
-	}
-	
-	*/
-	
-	public void MBT(){
+	private void MBT(){
 		int k=0;
 		System.out.println("NODES SIZE " + nodes.size());
 		if (k<nodes.size()){
@@ -71,6 +62,13 @@ public class ProblemSolver {
 		}
 	}
 	
+	public void getMBT(){
+		MBT();
+	}
+	
+	public void getSolution(ArrayList<Integer> nodes){
+		findSolution(nodes);
+	}
 	
 	public ArrayList<Integer> getSolutionsArrMBT(){
 		return this.solutionsArrMBT;

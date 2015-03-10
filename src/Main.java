@@ -30,45 +30,16 @@ public class Main {
 	
 	public static void main(final String[] args) {
 		Rules rules = new Rules();
-		ArrayList<Integer>nodes = new ArrayList<Integer>();
-		nodes = rules.getNodes();
+		ArrayList<Integer>nodes  = new ArrayList<Integer>();
+	    nodes = rules.getNodes();
 		Permutations permutations = new Permutations(nodes);
-		ProblemSolver solver= new ProblemSolver(nodes, permutations, rules);
-		solver.findSolution(nodes);
-		solver.MBT();
+		ProblemSolver problemSolver= new ProblemSolver(nodes, permutations, rules);
+		CoverterToLetters converter = new CoverterToLetters();
+		Reader reader = new Reader();
+		reader.read();
+		
+		problemSolver.getSolution(nodes);
+		problemSolver.getMBT();
+	    System.out.println(converter.getSingleSol(problemSolver.getSolutionsArrMBT(), rules.getLetterIndex()));
 	}
-		
-		
-				/*		
-				graph.getArrFromMap();
-				System.out.println(graph.getArrFromMap());
-				graph.myMap.clear();
-				// graph.arrUpdated= new ArrayList<String>();
-			
-    
-    */
-    //String[] arrS = new String[6];
-    //Iterator<String> it = arr.iterator();
-   
-    /*
-    private ArrayList<String> getArrFromMap(){
-    	ArrayList<String> arrUpdated= new ArrayList<String>();
-    	for (int i=1; i<=names.length; i++){
-    		arrUpdated.add(myMap.get(i));
-    		variations.add(arrUpdated);
-    	}
-    	return arrUpdated;	    	
-    }
-    
-   
-    
-    private ArrayList<String>  getMBT(){
-        System.out.println(variations);
-
-    }
-    */
-    
-    /*Private instance variables*/
-private  ArrayList<String> variations;
-
 }

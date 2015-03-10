@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Rules {
-	private String[] names = { "G", "J", "L", "M", "P", "V", };
+	 private String[] names = { "G", "J", "L", "M", "P", "V", };
 
 	/*
 	 * We have a fixed index to hold a particular value.
@@ -14,38 +14,42 @@ public class Rules {
 	private static final int P = 4;
 	private static final int V = 5;
 
-	final boolean rule1(final ArrayList<Integer> nodes) {
+	private final boolean rule1(final ArrayList<Integer> nodes) {
 		return ((nodes.get(V) < nodes.get(G)) && (nodes.get(G) < nodes.get(J)) && (nodes.get(J) <nodes.get(P)) && (nodes.get(P)<nodes.get(M)) &&
 				(nodes.get(M) <nodes.get(L)));
 	}
 
-	final boolean rule2(final ArrayList<Integer> nodes) {
+	private final boolean rule2(final ArrayList<Integer> nodes) {
 		return ((nodes.get(V) < nodes.get(G)) && (nodes.get(G) < nodes.get(J)) && (nodes.get(J) <nodes.get(P)) && (nodes.get(P)<nodes.get(M)) &&
 				(nodes.get(M) <nodes.get(L)));
 	}
 
-	final boolean rule3(final ArrayList<Integer> nodes) {
+	private final boolean rule3(final ArrayList<Integer> nodes) {
 		return ((nodes.get(V) < nodes.get(G)) && (nodes.get(G) < nodes.get(J)) && (nodes.get(J) <nodes.get(P)) && (nodes.get(P)<nodes.get(M)) &&
 				(nodes.get(M) <nodes.get(L)));
 	}
 
-	final boolean rule4(final ArrayList<Integer> nodes) {
+	private final boolean rule4(final ArrayList<Integer> nodes) {
 		return ((nodes.get(V) < nodes.get(G)) && (nodes.get(G) < nodes.get(J)) && (nodes.get(J) <nodes.get(P)) && (nodes.get(P)<nodes.get(M)) &&
 				(nodes.get(M) <nodes.get(L)));
 	}
 
-	final boolean isValid(final ArrayList<Integer> nodes) {
+	 private final boolean isValid(final ArrayList<Integer> nodes) {
 		return rule1(nodes) && rule2(nodes) && rule3(nodes) && rule4(nodes);
 	}
-	
-	final ArrayList<Integer> getNodes(){
-		for (int i=1; i<=names.length; i++){
+	 
+	 public boolean getIsValid(final ArrayList<Integer> nodes){
+			return isValid(nodes); 
+	 }
+	 
+	public final ArrayList<Integer> getNodes(){
+		for (int i=0; i<names.length; i++){
 			nodes.add(i);
 		}
 		return nodes;
 	}
 	
-	public String[] getNames(){
+	public final String[] getNames(){
 		return names;
 	}
 	

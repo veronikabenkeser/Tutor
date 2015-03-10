@@ -21,7 +21,7 @@ public class Permutations {
 
      /*
       * This method calculates the next Permutation. For example, if our initial list is 
-      * 1, 2, 3, 4, 5, it becomes 1, 2, 3, 5, 4.
+      * 0, 1, 2, 3, 4, it becomes 0, 1, 2, 4, 3.
       * We cannot do permutations if we are working with less than 2 digits. In other words, there are 
       * no permutations we can do if the number of things in the array-2< 0.
       */
