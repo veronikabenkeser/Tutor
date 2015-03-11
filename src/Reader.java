@@ -4,7 +4,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -14,6 +13,8 @@ import java.util.regex.Pattern;
  */
 
 public class Reader {
+	private String a;
+	private File file;
 	
 	String[] arr= { 
 			"one", "two", "three",
@@ -22,44 +23,53 @@ public class Reader {
 			"ten"
 	};
 	
-	private String prompt="";
-	private String newText="";
+	private String prompt = "";
+	private String newText = "";
 	private String noun = "";
-	
-	public Reader(){
-		File file = new File("LG_07_G3.txt");
+
+	public void readProblem(String a) {
+
 		BufferedReader rd = null;
-		
-		try{
+
+		try {
 			
+			file = new File(a);
 			rd = new BufferedReader(new FileReader(file));
 			StringBuilder sb = new StringBuilder();
-
 			
-			while(true){
-				String line =rd.readLine();
-				
-				if (line == null || line.equals("QUESTIONS")) break;				
-				sb.append(line);				
+			while (true) {
+				String line = rd.readLine();
+
+				if (line == null || line.equals("QUESTIONS"))
+					break;
+				sb.append(line);
 				prompt = sb.toString();
-		    }
-		}catch (FileNotFoundException e) {
-             System.out.println("File not found: " + file.toString());
-        } catch (IOException e) {
-             System.out.println("Unable to read file: " + file.toString());
-        }
-        finally {
-            try {
-                rd.close();
-            } catch (IOException e) {
-            	 e.printStackTrace();
-                 System.out.println("Unable to close file: " + file.toString());
-            }
-            catch(NullPointerException ex) {
-            }
-        }   
+			}
+			
+		} catch (FileNotFoundException e) {
+			System.out.println("File not found: " + file.toString());
+			
+		} catch (IOException e) {
+			System.out.println("Unable to read file: " + file.toString());
+			
+		} finally {
+			
+			try {
+				rd.close();
+				
+			} catch (IOException e) {
+				
+				e.printStackTrace();
+				System.out.println("Unable to close file: " + file.toString());
+				
+			} catch (NullPointerException ex) {
+			}
+		}
 	}
 
+	public void setFile(String a) {
+		this.a = a;
+	}
 	
 	public String showPrompt(){
 		return prompt;
@@ -221,9 +231,6 @@ public class Reader {
 		
 		return correct;
 	}
-	
-	
-	
 	
 	/*Private instance variables*/
 	private ArrayList<String> players = new ArrayList<String>();
