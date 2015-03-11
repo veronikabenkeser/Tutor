@@ -36,7 +36,11 @@ public class Main {
 		ProblemSolver problemSolver= new ProblemSolver(nodes, permutations, rules);
 		CoverterToLetters converter = new CoverterToLetters();
 		Reader reader = new Reader();
-		reader.read();
+		//reader.getParticipants();
+		//String noun = reader.getNoun();
+		//String newText = reader.changeText();
+		Parser parser = new Parser(reader);
+		
 		
 		problemSolver.getSolution(nodes);
 		problemSolver.getMBT();
