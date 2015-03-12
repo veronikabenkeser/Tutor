@@ -1,4 +1,3 @@
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -7,26 +6,20 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.RenderingHints;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-
+import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
-import javax.swing.border.Border;
 
 public class Tutor {
 	private String a;
@@ -38,11 +31,7 @@ public class Tutor {
 
 	public Tutor() {
 		a = "P1";
-		setCurrentGame(a);
-		reader.readProblem(a);
-		String newline = "\n";
-		p.setText(reader.showPrompt());
-		q.setText(reader.showQuestion());
+		loadNewGame(a);
 	}
 
 	private void setCurrentGame(String a) {
@@ -58,11 +47,17 @@ public class Tutor {
 		menuBar.add(menu2);
 		menuBar.add(menu3);
 
-		JRadioButtonMenuItem i1 = new JRadioButtonMenuItem("P1");
-		JRadioButtonMenuItem i2 = new JRadioButtonMenuItem("Game #2");
+		JRadioButtonMenuItem P1 = new JRadioButtonMenuItem("P1");
+		JRadioButtonMenuItem P2 = new JRadioButtonMenuItem("P2");
 
-		menu1.add(i1);
-		menu1.add(i2);
+		P1.setName("P1");
+		P2.setName("P2");
+
+		MyAction m1 = new MyAction(P1);
+		MyAction m2 = new MyAction(P2);
+
+		menu1.add(P1);
+		menu1.add(P2);
 		makeOnOffButtons(menu2);
 		makeOnOffButtons(menu3);
 
@@ -74,6 +69,24 @@ public class Tutor {
 		JRadioButtonMenuItem i4 = new JRadioButtonMenuItem("Off");
 		menu.add(i3);
 		menu.add(i4);
+	}
+
+	class MyAction {
+		public MyAction(final AbstractButton eventSource) {
+			eventSource.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					loadNewGame(eventSource.getName());
+				}
+			});
+		}
+	}
+
+	private void loadNewGame(String a) {
+		setCurrentGame(a);
+		reader.readProblem(a);
+		String newline = "\n";
+		p.setText(reader.showPrompt());
+		q.setText(reader.showQuestion());
 	}
 
 	private Container createContentPane() {

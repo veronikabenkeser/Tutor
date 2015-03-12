@@ -35,7 +35,8 @@ public class Reader {
 		BufferedReader rd = null;
 
 		try {
-			
+			//String b= ".txt";
+			//a+=b;
 			file = new File(a);
 			rd = new BufferedReader(new FileReader(file));
 			StringBuilder sb = new StringBuilder();
