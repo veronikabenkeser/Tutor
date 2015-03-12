@@ -92,7 +92,6 @@ public class DiagramArea extends JComponent {
 		g2.setPaint(Color.red);
 		simpleLine = new Line2D.Double(getWidth() - 80, 20, getWidth() - 60, 20);
 		g2.draw(simpleLine);
-		// g2.draw(new Line2D.Double(getWidth()-80, 20, getWidth()-60, 20));
 		repaint();
 	}
 	

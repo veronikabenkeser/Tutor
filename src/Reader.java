@@ -13,8 +13,10 @@ import java.util.regex.Pattern;
  */
 
 public class Reader {
+	private static final int SI = 9;
 	private String a;
 	private File file;
+	private String fullText;
 	
 	String[] arr= { 
 			"one", "two", "three",
@@ -24,6 +26,7 @@ public class Reader {
 	};
 	
 	private String prompt = "";
+	private String question = "";
 	private String newText = "";
 	private String noun = "";
 
@@ -36,17 +39,17 @@ public class Reader {
 			file = new File(a);
 			rd = new BufferedReader(new FileReader(file));
 			StringBuilder sb = new StringBuilder();
-			
+		
 			while (true) {
-				String line = rd.readLine();
-
-				if (line == null || line.equals("QUESTIONS"))
-					break;
-				sb.append(line);
-				prompt = sb.toString();
-			}
 			
-		} catch (FileNotFoundException e) {
+					String line = rd.readLine();
+					if (line == null) break;
+					sb.append(line +"\n");
+				    fullText = sb.toString();
+						
+				
+			}			
+		}catch (FileNotFoundException e) {
 			System.out.println("File not found: " + file.toString());
 			
 		} catch (IOException e) {
@@ -72,7 +75,15 @@ public class Reader {
 	}
 	
 	public String showPrompt(){
+		int index = fullText.indexOf("QUESTIONS");
+		prompt = fullText.substring(0, index);
 		return prompt;
+	}
+	
+	public String showQuestion(){
+		int index = fullText.indexOf("QUESTIONS")+SI;
+		question = fullText.substring(index);
+		return question;
 	}
 	
 	private void namesOfPlayers(){

@@ -13,35 +13,43 @@ import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
-	
+import javax.swing.border.Border;
+
 public class Tutor {
 	private String a;
 	JTextArea p = new JTextArea();
-	//private GUIControl control;
+	JTextArea q = new JTextArea();
+	// private GUIControl control;
 	private DiagramArea diagramArea = new DiagramArea();
 	private Reader reader = new Reader();
-	
-	public Tutor(){
+
+	public Tutor() {
 		a = "P1";
 		setCurrentGame(a);
 		reader.readProblem(a);
+		String newline = "\n";
 		p.setText(reader.showPrompt());
+		q.setText(reader.showQuestion());
 	}
-	
-	private void setCurrentGame(String a){
+
+	private void setCurrentGame(String a) {
 		reader.setFile(a);
 	}
-	
-	private JMenuBar createMenuBar(){
+
+	private JMenuBar createMenuBar() {
 		JMenuBar menuBar = new JMenuBar();
 		JMenu menu1 = new JMenu("PrepTest");
 		JMenu menu2 = new JMenu("Timer");
@@ -49,97 +57,124 @@ public class Tutor {
 		menuBar.add(menu1);
 		menuBar.add(menu2);
 		menuBar.add(menu3);
-	
+
 		JRadioButtonMenuItem i1 = new JRadioButtonMenuItem("P1");
 		JRadioButtonMenuItem i2 = new JRadioButtonMenuItem("Game #2");
-	
-		
-		
+
 		menu1.add(i1);
 		menu1.add(i2);
 		makeOnOffButtons(menu2);
 		makeOnOffButtons(menu3);
-		
+
 		return menuBar;
 	}
-	
+
 	private void makeOnOffButtons(JMenu menu) {
 		JRadioButtonMenuItem i3 = new JRadioButtonMenuItem("On");
 		JRadioButtonMenuItem i4 = new JRadioButtonMenuItem("Off");
 		menu.add(i3);
 		menu.add(i4);
 	}
-	private Container createContentPane(){
-		JPanel contentPane = new JPanel(new BorderLayout(16, 16)) {
+
+	private Container createContentPane() {
+		JPanel contentPane = new JPanel(new GridBagLayout()) {
 			@Override
 			protected void paintComponent(Graphics graphics) {
 				Graphics2D g2d = (Graphics2D) graphics;
 				g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 						RenderingHints.VALUE_ANTIALIAS_ON);
-	
+
 				GradientPaint gp = new GradientPaint(0, 0, getBackground()
 						.brighter().brighter(), 0, getHeight(), getBackground()
 						.darker().darker());
 				g2d.setPaint(gp);
 				g2d.fillRect(0, 0, getWidth(), getHeight());
-	
+
 				super.paintComponent(graphics);
 			}
 		};
-		
-		contentPane.add(createPanel2(), BorderLayout.CENTER);
-		contentPane.add(loadQuestion(), BorderLayout.EAST);
+
+		GridBagConstraints c = new GridBagConstraints();
+
+		c.insets = new Insets(5, 5, 5, 5);
+
+		c.fill = GridBagConstraints.BOTH;
+		c.gridx = 0;
+		c.gridy = 0;
+		contentPane.add(loadPrompt(), c);
+
+		c.fill = GridBagConstraints.BOTH;
+		c.gridx = 0;
+		c.gridy = 1;
+		c.weightx = 0.5;
+		contentPane.add(createPanel1(), c);
+
+		c.fill = GridBagConstraints.BOTH;
+		c.gridx = 1;
+		c.gridy = 0;
+		c.weightx = 1;
+		c.gridheight = 2;
+
+		contentPane.add(loadQuestion(), c);
 		contentPane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		contentPane.setBackground(Color.BLUE);
 		contentPane.setOpaque(false);
-		
+
 		return contentPane;
 	}
-	
-	private JTextArea loadQuestion(){
-		JTextArea q = new JTextArea("Question 1 goes here....", 30, 30);
-		//q.setLineWrap(true);
-		//q.setWrapStyleWord(true);
+
+	private JTextArea loadQuestion() {
+		q.setEditable(false);
+		q.setLineWrap(true);
+		q.setWrapStyleWord(true);
 		return q;
 	}
-	
-	private JTextArea loadPrompt(){
-		//JTextArea wordProblem = new JTextArea("Word problem goes here....", 100,
-			//100);
+
+	private JTextArea loadPrompt() {
 		p.setEditable(false);
 		p.setLineWrap(true);
 		p.setWrapStyleWord(true);
 		return p;
 	}
-	
+
 	/*
-	 * Create new panel with 2 rows and 1 column. The
-	 * vertical space between components is 0. The horizontal space between
-	 * components is 16.
+	 * Create new panel with 2 rows and 1 column. The vertical space between
+	 * components is 0. The horizontal space between components is 16.
 	 */
-	private JPanel createPanel2(){
-		JPanel panel2 = new JPanel(new GridLayout(2, 1, 0, 16));
+	/*
+	 * 
+	 * private JPanel createPanel2(){ JPanel panel2 = new JPanel(new
+	 * GridLayout(2, 1, 0, 16)); GridBagConstraints gbc = new
+	 * GridBagConstraints();
+	 * 
+	 * panel2.setOpaque(false); gbc.gridx = 0; gbc.gridy = 0;
+	 * panel2.add(loadPrompt(), gbc);
+	 * 
+	 * gbc.gridx = 0; gbc.gridy = 1; panel2.add(createPanel1(), gbc);
+	 * 
+	 * return panel2; }
+	 */
+	private JPanel createPanel1() {
+
+		JPanel panel1 = new JPanel(new GridBagLayout());
+		panel1.setPreferredSize(new Dimension(700, 300));
+		// panel1.setOpaque(false);
+
 		GridBagConstraints gbc = new GridBagConstraints();
-	
-		panel2.setOpaque(false);
+		String title = "Master Diagram";
+		diagramArea.setBorder(BorderFactory.createTitledBorder(title));
+
 		gbc.gridx = 0;
 		gbc.gridy = 0;
-		panel2.add(loadPrompt(), gbc);
-		
-		gbc.gridx = 0;
-		gbc.gridy = 1;
-		panel2.add(createPanel1(), gbc);
-		
-		return panel2;
-	}
-	
-	private JPanel createPanel1(){
-		
-		JPanel panel1 = new JPanel(new BorderLayout(0, 0));
-		panel1.setOpaque(false);
-		panel1.add(diagramArea, BorderLayout.CENTER);
-		panel1.add(createControls(), BorderLayout.EAST);
-		
+		panel1.add(diagramArea, gbc);
+
+		gbc.gridx = 1;
+		gbc.gridy = 0;
+		gbc.gridheight = 1;
+		gbc.fill = GridBagConstraints.VERTICAL;
+		gbc.anchor = GridBagConstraints.LINE_END;
+		panel1.add(createControls());
+
 		return panel1;
 	}
 
@@ -158,6 +193,7 @@ public class Tutor {
 		// upSlopedLineBtn.addActionListener(actionListener);
 
 		JPanel controls = new JPanel();
+		controls.setPreferredSize(new Dimension(150, 300));
 		controls.setLayout(new GridBagLayout());
 
 		/*
@@ -165,7 +201,7 @@ public class Tutor {
 		 * right; 5 on the bottom; 5 on the top;
 		 */
 		GridBagConstraints gbc = new GridBagConstraints();
-		gbc.insets = new Insets(0, 5, 5, 5);
+		gbc.insets = new Insets(0, 0, 5, 0);
 
 		// the way the component should be glued to the container
 		// gbc.anchor = GridBagConstraints.LINE_START;
@@ -202,33 +238,32 @@ public class Tutor {
 
 		return controls;
 	}
-	
-	
-	private static void createAndShowGUI(){
-		JFrame frame = new JFrame("COACH");
+
+	private static void createAndShowGUI() {
+		final JFrame frame = new JFrame("COACH");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
+
 		Tutor t = new Tutor();
 		frame.setJMenuBar(t.createMenuBar());
 		frame.setContentPane(t.createContentPane());
-
+		// frame.setSize(new Dimension(1200,800));
+		frame.setPreferredSize(new Dimension(1100, 700));
+		frame.pack();
 		frame.setLocationByPlatform(true);
-		frame.setPreferredSize(new Dimension(600, 600));
-		//TO DO: maybe a component listener instead of setMinimumSize for greater reliability.
-		frame.setMinimumSize(new Dimension(400, 400));
-		// frame.pack();
-		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-		
+
+		// TO DO: maybe a component listener instead of setMinimumSize for
+		// greater reliability.
+		// frame.setMinimumSize(new Dimension(400, 400));
+		// frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+
 		frame.setVisible(true);
 	}
-	
+
 	/*
-	 * TO DO :
-	private void setGUIControl(GUIControl guiControl){
-		this.control = control;
-	}
-	*/
-	
+	 * TO DO : private void setGUIControl(GUIControl guiControl){ this.control =
+	 * control; }
+	 */
+
 	/*
 	 * We will be implementing the invokeLater method because all interactions
 	 * in Swing must happen on the Event Dispatch Thread. If we're not currently
@@ -237,10 +272,9 @@ public class Tutor {
 	 * update that will be performed by the EDT. info
 	 * at:http://stackoverflow.com/questions/7196889/swingutilities-invokelater
 	 */
-	
+
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {
-
 			@Override
 			public void run() { // method of the anonymous class that
 								// implements the Runnable interface above
