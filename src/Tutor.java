@@ -47,17 +47,16 @@ public class Tutor {
 		menuBar.add(menu2);
 		menuBar.add(menu3);
 
-		JRadioButtonMenuItem P1 = new JRadioButtonMenuItem("P1");
-		JRadioButtonMenuItem P2 = new JRadioButtonMenuItem("P2");
-
-		P1.setName("P1");
-		P2.setName("P2");
-
-		MyAction m1 = new MyAction(P1);
-		MyAction m2 = new MyAction(P2);
-
+		JRadioButtonMenuItem P1 = new JRadioButtonMenuItem();
+		JRadioButtonMenuItem P2 = new JRadioButtonMenuItem();
+		
+		P1.addActionListener(fileSelectionListener);
+		P2.addActionListener(fileSelectionListener);
+		P1.setText("P1");
+		P2.setText("P2");
 		menu1.add(P1);
 		menu1.add(P2);
+		
 		makeOnOffButtons(menu2);
 		makeOnOffButtons(menu3);
 
@@ -71,16 +70,14 @@ public class Tutor {
 		menu.add(i4);
 	}
 
-	class MyAction {
-		public MyAction(final AbstractButton eventSource) {
-			eventSource.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					loadNewGame(eventSource.getName());
-				}
-			});
+	ActionListener fileSelectionListener = new ActionListener(){
+		public void actionPerformed(ActionEvent e){
+			JRadioButtonMenuItem source = (JRadioButtonMenuItem)e.getSource();
+			String a = source.getText();
+			loadNewGame(a);
 		}
-	}
-
+	};
+	
 	private void loadNewGame(String a) {
 		setCurrentGame(a);
 		reader.readProblem(a);
@@ -154,6 +151,7 @@ public class Tutor {
 	 * Create new panel with 2 rows and 1 column. The vertical space between
 	 * components is 0. The horizontal space between components is 16.
 	 */
+	
 	/*
 	 * 
 	 * private JPanel createPanel2(){ JPanel panel2 = new JPanel(new
@@ -166,7 +164,9 @@ public class Tutor {
 	 * gbc.gridx = 0; gbc.gridy = 1; panel2.add(createPanel1(), gbc);
 	 * 
 	 * return panel2; }
-	 */
+	 
+*/
+	
 	private JPanel createPanel1() {
 
 		JPanel panel1 = new JPanel(new GridBagLayout());
@@ -213,6 +213,7 @@ public class Tutor {
 		 * I want the gaps between the buttons to be: 0 on the left; 5 on the
 		 * right; 5 on the bottom; 5 on the top;
 		 */
+		
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.insets = new Insets(0, 0, 5, 0);
 
@@ -296,4 +297,5 @@ public class Tutor {
 		});
 	}
 }
+
 	

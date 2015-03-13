@@ -15,23 +15,20 @@ public class Rules {
 	private static final int V = 5;
 
 	private final boolean rule1(final ArrayList<Integer> nodes) {
-		return ((nodes.get(V) < nodes.get(G)) && (nodes.get(G) < nodes.get(J)) && (nodes.get(J) <nodes.get(P)) && (nodes.get(P)<nodes.get(M)) &&
+		return ((nodes.get(J) <nodes.get(P)) && (nodes.get(P)<nodes.get(M)) &&
 				(nodes.get(M) <nodes.get(L)));
 	}
 
 	private final boolean rule2(final ArrayList<Integer> nodes) {
-		return ((nodes.get(V) < nodes.get(G)) && (nodes.get(G) < nodes.get(J)) && (nodes.get(J) <nodes.get(P)) && (nodes.get(P)<nodes.get(M)) &&
-				(nodes.get(M) <nodes.get(L)));
+		return (nodes.get(G) !=0); //G is not the 1st thing in the sequence.
 	}
 
 	private final boolean rule3(final ArrayList<Integer> nodes) {
-		return ((nodes.get(V) < nodes.get(G)) && (nodes.get(G) < nodes.get(J)) && (nodes.get(J) <nodes.get(P)) && (nodes.get(P)<nodes.get(M)) &&
-				(nodes.get(M) <nodes.get(L)));
+		return (nodes.get(V) < nodes.get(J));
 	}
 
 	private final boolean rule4(final ArrayList<Integer> nodes) {
-		return ((nodes.get(V) < nodes.get(G)) && (nodes.get(G) < nodes.get(J)) && (nodes.get(J) <nodes.get(P)) && (nodes.get(P)<nodes.get(M)) &&
-				(nodes.get(M) <nodes.get(L)));
+		return (nodes.get(G) < nodes.get(J));
 	}
 
 	 private final boolean isValid(final ArrayList<Integer> nodes) {
