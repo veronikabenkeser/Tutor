@@ -15,8 +15,16 @@ public class Rules {
 	private static final int V = 5;
 
 	private final boolean rule1(final ArrayList<Integer> nodes) {
-		return ((nodes.get(J) <nodes.get(P)) && (nodes.get(P)<nodes.get(M)) &&
-				(nodes.get(M) <nodes.get(L)));
+		boolean result0 = false;
+		
+		 if (nodes.get(G) == 2  || nodes.get(P)!=2) {
+			result0 = ((nodes.get(J) == 3)|| nodes.get(V) ==4);
+		 } else {
+			 result0 = true;
+		 }
+		 
+		 
+		 return result0;
 	}
 
 	private final boolean rule2(final ArrayList<Integer> nodes) {
@@ -24,7 +32,7 @@ public class Rules {
 	}
 
 	private final boolean rule3(final ArrayList<Integer> nodes) {
-		return (nodes.get(V) < nodes.get(J));
+		return ((nodes.get(V) == nodes.get(P)+1) || (nodes.get(V) == nodes.get(P)-1));
 	}
 
 	private final boolean rule4(final ArrayList<Integer> nodes) {
