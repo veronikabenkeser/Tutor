@@ -1,12 +1,13 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /*
- * The class reads the prompt and interprets the rules into their logical structure. 
+ * The class defines interpretation rules for the text.
  */
 
 public class Parser {
@@ -64,12 +65,7 @@ public class Parser {
 		int tempIndex = matcher.start();
 		newText = newText.substring(tempIndex);
 
-		System.out.println("TEXT TEXT: " + newText);
-		System.out.println("**");
 		Scanner sc = new Scanner(newText);
-
-		System.out.println("TEXT222: " + newText);
-		System.out.println("TEXT 444 " + newText);
 
 		while (sc.hasNextLine()) {
 
@@ -82,35 +78,88 @@ public class Parser {
 			if (matcher2.find())
 				sentenceArr.add(sentence);
 		}
-		System.out.println("printing " + sentenceArr);
-		System.out.println("**");
-		System.out.println(sentenceArr.size());
-
 	}
 
 	public void totalParse() {
 		updateSentenceArr();
-		parse1();
+		// parse1();
 		// System.out.println(parse1());
 	}
 
-	public String parse1() {
-		String result = "";
-		for (int i = 0; i < sentenceArr.size(); i++) {
+	/*
+	 * public String[] separateIntoWords(ArrayList<String> sentenceArr) { String
+	 * result = ""; for (int i = 0; i < sentenceArr.size(); i++) {
+	 * 
+	 * // String firstWord = sentenceArr.get(i). if
+	 * (!sentenceArr.get(i).isEmpty()) { String[] words =
+	 * sentenceArr.get(i).replaceAll("^\\s+\\b", "") .split("\\s+");
+	 * System.out.println("words " + Arrays.toString(words));
+	 * System.out.println("word at 0 : " + words[0]); } } return result; }
+	 */
 
-			// String firstWord = sentenceArr.get(i).
-			if (!sentenceArr.get(i).isEmpty()) {
-				String[] words = sentenceArr.get(i).replaceAll("^\\s+\\b", "")
-						.split("\\s+");
-				System.out.println("words " + Arrays.toString(words));
-				System.out.println("word at 0 : " + words[0]);
-			}
+	public void doVisibleActions() {
+		while (!sentenceArr.isEmpty()) {
+			parseInAccordanceWithParselet(createTokens(sentenceArr));
 		}
-
-		return result;
 	}
 
-	//private HashMap<String, Parselet> parselets = new HashMap<String, Parselet>();
-	private String[] updatedText;
-	private ArrayList<String> sentenceArr = new ArrayList<String>();
+	public ArrayList<Token> createTokens(ArrayList<String> sentenceArr) {
+		String text = "";
+		Parselet parselet = null;
+		
+		for (int i = 0; i < sentenceArr.size(); i++) {
+			
+			Pattern pattern1 = Pattern.compile("(if)\\s[^(){}]");
+			Matcher matcher1 = pattern1.matcher(sentenceArr.get(i)
+					.toLowerCase());
+
+			if (matcher1.find()) {
+				text = sentenceArr.get(i);
+				parselet = mParselets.get("if");
+				System.out
+						.println("Getting the value associated with the if key");
+			} else {
+				text = sentenceArr.get(i);
+				parselet = mParselets.get("name");
+				System.out
+						.println("Getting the value associated with the name key");
+			}
+
+			Token t = new Token(text, parselet);
+			allTokens.add(t);
+		}
+		sentenceArr.removeAll(sentenceArr);
+		return allTokens;
+	}
+
+	public void parseInAccordanceWithParselet(ArrayList<Token> allTokens) {
+		for (Token t : allTokens) {
+			segment(t);
+		}
+		allTokens.removeAll(allTokens);
+	}
+
+	public void segment(Token token) {
+		String text = token.getText();
+		Parselet parselet = token.getParselet();
+
+		Parselet a = parselet;
+		String newString = a.parse(text);
+
+		if (a.getClass() == NameParselet.class) {
+			sentenceArrFinal.add(newString);
+		} else {
+			sentenceArr.add(newString);
+		}
+	}
+
+	public void initializemParselets() {
+		mParselets.put("if", new ConditionalParselet());
+		mParselets.put("name", new NameParselet());
+	}
+
+	private HashMap<String, Parselet> mParselets = new HashMap<String, Parselet>();
+	public ArrayList<String> sentenceArr = new ArrayList<String>();
+	private ArrayList<Token> allTokens = new ArrayList<Token>();
+	private ArrayList<String> sentenceArrFinal = new ArrayList<String>();
 }
