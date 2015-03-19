@@ -1,5 +1,7 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -99,41 +101,61 @@ public class Parser {
 		while (!sentenceArr.isEmpty()) {
 			parseInAccordanceWithParselet(createTokens(sentenceArr));
 		}
+
+		System.out.println("Resulting interpretations: " + sentenceArrFinal);
 	}
 
 	public ArrayList<Token> createTokens(ArrayList<String> sentenceArr) {
 		String text = "";
 		Parselet parselet = null;
+		boolean continueMakingTokens = true;
 
 		for (int i = 0; i < sentenceArr.size(); i++) {
 
 			String sentence = sentenceArr.get(i);
 
+			Pattern pattern0 = Pattern.compile("\\b[A-Z]\\b[^==]+?\\d");
+			Matcher matcher0 = pattern0.matcher(sentence);
+
 			if (sentence.matches(".*(if|If)\\s*[^(){}]+")) {
-				text = sentenceArr.get(i);
+				text = sentence;
 				parselet = mParselets.get("if");
 				System.out
 						.println("Getting the value associated with the if key");
 			} else if (sentence.matches(".*\\b(Either|either)\\b.*(or).*")) {
-				text = sentenceArr.get(i);
+				text = sentence;
 				parselet = mParselets.get("either");
 				System.out
 						.println("Getting the value associated with the either key");
 
 			} else if (sentence.matches(".*\\b(Neither|neither)\\b.*(nor).*")) {
-				text = sentenceArr.get(i);
+				text = sentence;
 				parselet = mParselets.get("neither");
 				System.out
 						.println("Getting the value associated with the neither key"); // !
-			} else if (sentence.matches("[a-zA-Z]\\D*\\d.*")) {
-				text = sentenceArr.get(i);
+			} else if (matcher0.find()) {
+				text = sentence;
 				parselet = mParselets.get("name");
 				System.out
 						.println("Getting the value associated with the name key");
+			} else if (sentence.contains("and")) {
+				text = sentence;
+				parselet = mParselets.get("conjunction");
+				System.out
+						.println("Getting the value associated with the conjunction key");
 			} else {
-				System.out.println("Unable to find the correct parselet.");
-			}
+				text = sentence;
+				parselet = mParselets.get("cleanup");
+				System.out
+						.println("Getting the value associated with the cleanup key");
 
+				/*
+				 * System.out.println("Unable to find the correct parselet.");
+				 * sentenceArrFinal.add(sentence);
+				 * System.out.println("HERE ARE ALL THE FINAL RULES: " +
+				 * sentenceArrFinal);
+				 */
+			}
 			Token t = new Token(text, parselet);
 			allTokens.add(t);
 		}
@@ -149,23 +171,30 @@ public class Parser {
 	}
 
 	public void segment(Token token) {
+
 		String text = token.getText();
 		Parselet parselet = token.getParselet();
 
 		Parselet a = parselet;
 		String newString = a.parse(text);
 
-		if (a.getClass() == NameParselet.class) {
+		if (a.getClass() == CodeCleanUpParselet.class) {
 			sentenceArrFinal.add(newString);
 		} else {
 			sentenceArr.add(newString);
 		}
 	}
 
+	public boolean allParsingIsComplete() {
+		return (createTokens(sentenceArr).isEmpty());
+	}
+
 	public void initializemParselets() {
 		mParselets.put("if", new ConditionalParselet());
 		mParselets.put("name", new NameParselet());
 		mParselets.put("either", new EitherOrParselet());
+		mParselets.put("conjunction", new ConjunctionParselet());
+		mParselets.put("cleanup", new CodeCleanUpParselet());
 	}
 
 	private HashMap<String, Parselet> mParselets = new HashMap<String, Parselet>();

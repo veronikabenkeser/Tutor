@@ -1,6 +1,7 @@
 public class ConditionalParselet implements Parselet {
-	
+
 	public String parse(String text) {
+
 		if (text.contains("only if")) {
 			doOnlyIfP(text);
 		} else if (text.contains("if and only if")) {
@@ -13,6 +14,7 @@ public class ConditionalParselet implements Parselet {
 		} else if (text.contains("If")) {
 			text = doIfP(text);
 		}
+		System.out.println("ConditionalParselet is done. Result: " + text);
 		return text;
 	}
 
@@ -50,10 +52,8 @@ public class ConditionalParselet implements Parselet {
 		sb.append(antecedent);
 		sb.append("){");
 		sb.append(consequent);
-		sb.append("};");
+		sb.append("}");
 		text = sb.toString();
-
-		System.out.println("ConditionalParselet is done. Result: " + text);
 		return text;
 	}
 
@@ -71,4 +71,3 @@ public class ConditionalParselet implements Parselet {
 		// TODO Auto-generated method stub
 	}
 }
-
