@@ -1,7 +1,5 @@
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -106,23 +104,34 @@ public class Parser {
 	public ArrayList<Token> createTokens(ArrayList<String> sentenceArr) {
 		String text = "";
 		Parselet parselet = null;
-		
-		for (int i = 0; i < sentenceArr.size(); i++) {
-			
-			Pattern pattern1 = Pattern.compile("(if)\\s[^(){}]");
-			Matcher matcher1 = pattern1.matcher(sentenceArr.get(i)
-					.toLowerCase());
 
-			if (matcher1.find()) {
+		for (int i = 0; i < sentenceArr.size(); i++) {
+
+			String sentence = sentenceArr.get(i);
+
+			if (sentence.matches(".*(if|If)\\s*[^(){}]+")) {
 				text = sentenceArr.get(i);
 				parselet = mParselets.get("if");
 				System.out
 						.println("Getting the value associated with the if key");
-			} else {
+			} else if (sentence.matches(".*\\b(Either|either)\\b.*(or).*")) {
+				text = sentenceArr.get(i);
+				parselet = mParselets.get("either");
+				System.out
+						.println("Getting the value associated with the either key");
+
+			} else if (sentence.matches(".*\\b(Neither|neither)\\b.*(nor).*")) {
+				text = sentenceArr.get(i);
+				parselet = mParselets.get("neither");
+				System.out
+						.println("Getting the value associated with the neither key"); // !
+			} else if (sentence.matches("[a-zA-Z]\\D*\\d.*")) {
 				text = sentenceArr.get(i);
 				parselet = mParselets.get("name");
 				System.out
 						.println("Getting the value associated with the name key");
+			} else {
+				System.out.println("Unable to find the correct parselet.");
 			}
 
 			Token t = new Token(text, parselet);
@@ -156,6 +165,7 @@ public class Parser {
 	public void initializemParselets() {
 		mParselets.put("if", new ConditionalParselet());
 		mParselets.put("name", new NameParselet());
+		mParselets.put("either", new EitherOrParselet());
 	}
 
 	private HashMap<String, Parselet> mParselets = new HashMap<String, Parselet>();
@@ -163,3 +173,4 @@ public class Parser {
 	private ArrayList<Token> allTokens = new ArrayList<Token>();
 	private ArrayList<String> sentenceArrFinal = new ArrayList<String>();
 }
+
