@@ -48,7 +48,7 @@ public class Parser {
 	}
 
 	public boolean isSimpleOrderingGame() {
-		noun = reader.getNoun();
+		//noun = reader.getNoun();
 		newText = reader.getNewText();
 
 		Pattern pattern = Pattern.compile(orderingGameRegex);
@@ -111,6 +111,9 @@ public class Parser {
 		boolean continueMakingTokens = true;
 
 		for (int i = 0; i < sentenceArr.size(); i++) {
+			
+			System.out.println("SENTENCE ARR " + sentenceArr.size());
+			System.out.println("SENTENCE ARR " + sentenceArr);
 
 			String sentence = sentenceArr.get(i);
 
@@ -202,4 +205,3 @@ public class Parser {
 	private ArrayList<Token> allTokens = new ArrayList<Token>();
 	private ArrayList<String> sentenceArrFinal = new ArrayList<String>();
 }
-

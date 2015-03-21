@@ -18,6 +18,7 @@ public class ProblemSolver {
 	/*
 	 * This method finds all the permutations that fit the rules outlined in the Rules class.
 	 */
+
 	private void findSolution(ArrayList<Integer> nodes){
 		while (permutations.hasPerms()) {
 			if (rules.getIsValid(nodes)) {
@@ -46,7 +47,6 @@ public class ProblemSolver {
 					System.out.println(solutionsArr.size()-2);
 					if(i== solutionsArr.size()-2){
 						System.out.println("TRUE");
-						//solutionsMap.put(k, letter);
 						k++;
 						if (k == nodes.size()) break;
 					}
@@ -57,7 +57,6 @@ public class ProblemSolver {
 					//System.out.println("k is "+k);
 					if (k == nodes.size()) break;
 				}
-				System.out.println("SOLUTIONS MAP" + solutionsMap);
 			}
 		}
 	}
@@ -71,12 +70,12 @@ public class ProblemSolver {
 	}
 	
 	public ArrayList<Integer> getSolutionsArrMBT(){
+		System.out.println("Getting value of ProblemSolver.getSOlutionsArrMBT()");
 		return this.solutionsArrMBT;
 	}
 	
 	private HashMap<Integer, String> myMap = new HashMap<Integer, String>();
 	private ArrayList<ArrayList<Integer>> solutionsArr = new ArrayList<ArrayList<Integer>>();
-	private HashMap<Integer, String> solutionsMap = new  HashMap<Integer, String>();
 	private ArrayList<Integer>solutionsArrMBT = new ArrayList<Integer>();
 	
 }

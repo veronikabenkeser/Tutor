@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -17,19 +18,19 @@ public class Reader {
 	private String a;
 	private File file;
 	private String fullText;
+	private String prompt = "";
+	private String question = "";
+	private String newText = "";
 	
 	String[] arr= { 
 			"one", "two", "three",
 			"four", "five", "six",
 			"seven", "eight", "nine",
-			"ten"
+			"ten", "first", "second", "third",
+			"fourth", "fifth", "sixth", "seventh",
+			
 	};
 	
-	private String prompt = "";
-	private String question = "";
-	private String newText = "";
-	private String noun = "";
-
 	public void readProblem(String a) {
 
 		BufferedReader rd = null;
@@ -38,7 +39,7 @@ public class Reader {
 			//String b= ".txt";
 			//a+=b;
 			file = new File(a);
-			rd = new BufferedReader(new FileReader(file));
+			rd = new BufferedReader(new FileReader(a));
 			StringBuilder sb = new StringBuilder();
 		
 			while (true) {
@@ -49,7 +50,15 @@ public class Reader {
 				    fullText = sb.toString();
 						
 				
-			}			
+			}	
+			
+			allParticipants.removeAll(allParticipants);
+			players.removeAll(players);
+
+			if(fullText.contains("QUESTIONS")) getParticipants();
+			//checkForErrors();
+			
+			
 		}catch (FileNotFoundException e) {
 			System.out.println("File not found: " + file.toString());
 			
@@ -71,7 +80,7 @@ public class Reader {
 		}
 	}
 
-	public void setFile(String a) {
+	public void setFile(String a) { //TODO still need this ?? ? ?
 		this.a = a;
 	}
 	
@@ -106,16 +115,16 @@ public class Reader {
 		String lastPlayer = m2.group();
 		players.add(lastPlayer);
 		
-		System.out.println(players);
+		System.out.println("players: " + players);
 	}
 	
-	private void getParticipants(){
+	private void getParticipants(){		
 		namesOfPlayers();
 		for(int i=0; i < players.size(); i++){
 			char ch = (players.get(i).charAt(0));
 			allParticipants.add(i, Character.toString(ch));
 		}
-		System.out.println(allParticipants);
+		System.out.println(allParticipants);	
 	}
 	
 	public String getNewText(){
@@ -123,6 +132,21 @@ public class Reader {
 		return convertStrToNums(text);
 	}
 	
+	private void checkpoint1(String newText){
+		//String newText = getNewText();
+		//String result = "";
+		if (!totalIsCorrect(newText)){
+			//result = findNoun(newText);
+			System.out.println("Could not confirm the number of participants.");
+		}
+	}
+	/*
+	
+	public void checkForErrors(){
+		checkpoint1(getNewText());
+	}
+	*/
+	/*
 	public String getNoun(){
 		String newText = getNewText();
 		String result = "";
@@ -133,14 +157,16 @@ public class Reader {
 		}
 		return result;
 	}
+	*/
+
 	
 	private String convertStrToNums(String text){
-		String [] words = text.split(" ");
-		System.out.println("WORDS" + words);
+		//splitting into words and punctuation
+		String [] words = text.split("\\b");
 		for (int i=0; i<words.length; i++){
 			for(String ss: arr){
 				if (words[i].toLowerCase().equals(ss)){
-					words[i]=numStrToInt(ss);
+					words[i] = numStrToInt(ss).toString();	
 				}
 			}
 			
@@ -155,7 +181,7 @@ public class Reader {
 		System.out.println("NEWTEXT" + newText);
 		return newText;
 	}
-	
+	/*
 	private String findNoun(String newText){
 		int index=-1; 
 		for(int i=0; i<newText.length();i++){
@@ -187,46 +213,39 @@ public class Reader {
 		return noun; 
 	}
 
+	*/
+
+	private Integer numStrToInt(String numStr){
+		hm.put("one", 1);
+		hm.put("first", 1);
+		hm.put("two", 2);
+		hm.put("second", 2);
+		hm.put("three", 3);
+		hm.put("third", 3);
+		hm.put("four", 4);
+		hm.put("fourth", 4);
+		hm.put("five", 5);
+		hm.put("fifth", 5);
+		hm.put("six", 6);
+		hm.put("sixth", 6);
+		hm.put("seven", 7);
+		hm.put("seventh", 7);
+		return hm.get(numStr);
+		
+		
+		
+	}
+		
 	
 
-	private static String numStrToInt(String numStr){
 	
-		String num = "0";
-		
-		switch(numStr){
-		
-		case "one": num = "1";
-			break;
-		case "two": num = "2";
-			break;
-		case "three": num = "3";
-			break;
-		case "four": num = "4";
-			break;
-		case "five":num = "5";
-			break;
-		case "six":num = "6";
-			break;
-		case "seven":
-			num ="7" ;
-			break;
-		case "eight":num = "8";
-			break;
-		case "nine":num = "9";
-			break;
-		case "ten":num = "10";
-			break;
-		default: 
-			num= "-1";
-			break;
-		}
-		return num;
-	}
 	
 	/*
 	 * This method finds the first number in the text and compares it to the size of the allParticipants array.
 	 * The first digit in the prompt text must be the total number of players.
 	 */
+
+	
 	private boolean totalIsCorrect (String newText){
 		getParticipants();
 		
@@ -245,8 +264,8 @@ public class Reader {
 	}
 	
 	/*Private instance variables*/
+	
 	private ArrayList<String> players = new ArrayList<String>();
 	private ArrayList<String> allParticipants = new ArrayList<String>();
-	private ArrayList<String> nounArr = new ArrayList<String>();
-	 
+	private HashMap<String , Integer> hm = new HashMap<String , Integer>();	 
 }

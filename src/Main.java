@@ -1,7 +1,14 @@
+/*import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+
+
+import javax.swing.SwingUtilities;
+
 
 /*
  * This program solves logic puzzles by doing permutations until permutations that fit that logic rules specified in the Rules class are found.
@@ -26,24 +33,58 @@ import java.util.List;
  *  the letter at index 4 is 4th;
  *  the letter at index 5 is 1st.
  */
+/*
 public class Main {
+	public Main(){
+		
+	}
 	
-	public static void main(final String[] args) {
-		Rules rules = new Rules();
-		ArrayList<Integer>nodes  = new ArrayList<Integer>();
-	    nodes = rules.getNodes();
+	//public static void main(final String[] args) {
+	/*
+		public static void main(final String[] args) {
+			
+			SwingUtilities.invokeLater(new Runnable() {
+				@Override
+				public void run() {// method of the anonymous class that implements the Runnable interface. 
+					Reader reader = new Reader();
+					Gui gui = new Gui(reader);
+					gui.createAndShowGUI();		
+					gui.setVisible(true);
+				}
+			});
+			
+			
+
+		
+			/*
+		AutomaticRulesWriter rw = new AutomaticRulesWriter();
+		rw.printRulesToFile();
+	
+		//doneRules rules = new Rules();
+		//done ArrayList<Integer>nodes  = new ArrayList<Integer>();
+	   //done nodes = rules.getNodes();
+	    
+	    
 		Permutations permutations = new Permutations(nodes);
 		ProblemSolver problemSolver= new ProblemSolver(nodes, permutations, rules);
+		
+		
 		CoverterToLetters converter = new CoverterToLetters();
 		Reader reader = new Reader();
+		//reader.readProblem("P1");
 		//reader.getParticipants();
 		//String noun = reader.getNoun();
 		//String newText = reader.changeText();
 		Parser parser = new Parser(reader);
-		
+		//System.out.println("IS THIS A SIMPLE GAME?" + parser.isSimpleOrderingGame());
 		
 		problemSolver.getSolution(nodes);
 		problemSolver.getMBT();
 	    System.out.println(converter.getSingleSol(problemSolver.getSolutionsArrMBT(), rules.getLetterIndex()));
+	    
+	    */
+			/*
 	}
 }
+*/
+		

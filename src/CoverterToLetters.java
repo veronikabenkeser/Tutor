@@ -4,7 +4,6 @@ import java.util.HashMap;
 
 public class CoverterToLetters {
 	private ProblemSolver problemSolver;
-	private Rules rules;
 
 	private void mapLettersToNumbers(ArrayList<Integer> singleSolutionMBT, HashMap<Integer, String> letterIndex){
 		for(int i=0; i<singleSolutionMBT.size(); i++){
@@ -31,3 +30,4 @@ public class CoverterToLetters {
 	private ArrayList<String> singleSolutionMBTLettersArr = new ArrayList<String>();
 
 }
+
