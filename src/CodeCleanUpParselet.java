@@ -6,8 +6,8 @@ public class CodeCleanUpParselet implements Parselet {
 
 	@Override
 	public String parse(String text) {
-		text = addSemicolon(removePeriod(text));
-
+		//text = addSemicolon(removePeriod(text));
+		text = removePeriod(text);
 		return text;
 	}
 
@@ -24,9 +24,11 @@ public class CodeCleanUpParselet implements Parselet {
 		return text;
 	}
 
+	/*
 	private String addSemicolon(String text) {
 		text = text + ";";
 		return text;
 	}
+	*/
 }
 

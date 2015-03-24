@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -21,159 +22,189 @@ public class Reader {
 	private String prompt = "";
 	private String question = "";
 	private String newText = "";
-	
-	String[] arr= { 
-			"one", "two", "three",
-			"four", "five", "six",
-			"seven", "eight", "nine",
-			"ten", "first", "second", "third",
-			"fourth", "fifth", "sixth", "seventh",
-			
+
+	String[] arr = { "one", "two", "three", "four", "five", "six", "seven",
+			"eight", "nine", "ten", "first", "second", "third", "fourth",
+			"fifth", "sixth", "seventh", "eighth", "ninth", "tenth",
+
 	};
-	
+
 	public void readProblem(String a) {
 
 		BufferedReader rd = null;
 
 		try {
-			//String b= ".txt";
-			//a+=b;
+			// String b= ".txt";
+			// a+=b;
 			file = new File(a);
 			rd = new BufferedReader(new FileReader(a));
 			StringBuilder sb = new StringBuilder();
-		
+
 			while (true) {
-			
-					String line = rd.readLine();
-					if (line == null) break;
-					sb.append(line +"\n");
-				    fullText = sb.toString();
-						
-				
-			}	
-			
+
+				String line = rd.readLine();
+				if (line == null)
+					break;
+				sb.append(line + "\n");
+				fullText = sb.toString();
+
+			}
+
 			allParticipants.removeAll(allParticipants);
 			players.removeAll(players);
 
-			if(fullText.contains("QUESTIONS")) getParticipants();
-			//checkForErrors();
-			
-			
-		}catch (FileNotFoundException e) {
+			if (fullText.contains("QUESTIONS")) {
+				getParticipants();
+				String text = showPrompt();
+				String newText = getNewText(text);
+
+				System.out.println("THIS IS THE LOADED TEXT " + newText);
+
+				if (totalIsCorrect(newText) && isSimpleOrderingGame(newText)) {
+					Parser parser = new Parser(newText);
+					parser.doVisibleActions();
+					AutomaticRulesWriter rw = new AutomaticRulesWriter(
+							allParticipants, parser);
+					rw.printRulesToFile();
+					// Permutations permutations = new Permutations();
+
+				} else {
+					System.out
+							.println("The program either could not confirm the number of active participants or"
+									+ "this is not a simple ordering game.");
+				}
+			}
+
+			// checkForErrors();
+
+		} catch (FileNotFoundException e) {
 			System.out.println("File not found: " + file.toString());
-			
+
 		} catch (IOException e) {
 			System.out.println("Unable to read file: " + file.toString());
-			
+
 		} finally {
-			
+
 			try {
 				rd.close();
-				
+
 			} catch (IOException e) {
-				
+
 				e.printStackTrace();
 				System.out.println("Unable to close file: " + file.toString());
-				
+
 			} catch (NullPointerException ex) {
 			}
 		}
 	}
 
-	public void setFile(String a) { //TODO still need this ?? ? ?
+	public void setFile(String a) { // TODO still need this ?? ? ?
 		this.a = a;
 	}
-	
-	public String showPrompt(){
+
+	public String showPrompt() {
 		int index = fullText.indexOf("QUESTIONS");
 		prompt = fullText.substring(0, index);
 		return prompt;
 	}
-	
-	public String showQuestion(){
-		int index = fullText.indexOf("QUESTIONS")+SI;
+
+	public String showQuestion() {
+		int index = fullText.indexOf("QUESTIONS") + SI;
 		question = fullText.substring(index);
 		return question;
 	}
-	
-	private void namesOfPlayers(){
-		String text = showPrompt();
-		Pattern participants;
-		int endPoint =0;
-		participants = Pattern.compile("([A-Z]+[^,\\s]+[,])");
-		Matcher m1 = participants.matcher(text);
-		
-		while(m1.find()){
-			String result = m1.group();
-			players.add(result);
-			endPoint = m1.end();
-		}
-		String strLeft = text.substring(endPoint, text.length());
-		Pattern pattern2= Pattern.compile("[A-Z]+[a-z]*");
-		Matcher m2 = pattern2.matcher(strLeft);
-		m2.find();
-		String lastPlayer = m2.group();
-		players.add(lastPlayer);
-		
-		System.out.println("players: " + players);
+
+	private boolean isSimpleOrderingGame(String newText) {
+		Pattern pattern = Pattern
+				.compile("(each|Each)+.*(exactly|Exactly).*(1)");
+		Matcher matcher = pattern.matcher(newText);
+		return matcher.find();
 	}
-	
-	private void getParticipants(){		
+
+	private void namesOfPlayers() {
+		String text = showPrompt();
+		Pattern pattern = Pattern.compile("(-).*(-)");
+		Matcher matcher = pattern.matcher(text);
+		matcher.find();
+		String result = matcher.group();
+
+		Pattern pattern2 = Pattern.compile("[A-Z]+[a-z]*");
+		Matcher matcher2 = pattern2.matcher(result);
+		while (matcher2.find()) {
+			String player = matcher2.group();
+			players.add(player);
+			System.out.println("players: " + players);
+		}
+	}
+
+	private void getParticipants() {
 		namesOfPlayers();
-		for(int i=0; i < players.size(); i++){
+		for (int i = 0; i < players.size(); i++) {
 			char ch = (players.get(i).charAt(0));
 			allParticipants.add(i, Character.toString(ch));
+			nameChars.put(players.get(i), players.get(i).charAt(0));
 		}
-		System.out.println(allParticipants);	
+		System.out.println(allParticipants);
 	}
-	
-	public String getNewText(){
-		String text = showPrompt();
+
+	public String getNewText(String text) {
+
+		text = convertPlayerNames(text);
 		return convertStrToNums(text);
 	}
-	
-	private void checkpoint1(String newText){
-		//String newText = getNewText();
-		//String result = "";
-		if (!totalIsCorrect(newText)){
-			//result = findNoun(newText);
-			System.out.println("Could not confirm the number of participants.");
-		}
-	}
-	/*
-	
-	public void checkForErrors(){
-		checkpoint1(getNewText());
-	}
-	*/
-	/*
-	public String getNoun(){
-		String newText = getNewText();
-		String result = "";
-		if (totalIsCorrect(newText)){
-			result = findNoun(newText);
-		} else {
-			System.out.println("Could not confirm the number of participants.");
-		}
-		return result;
-	}
-	*/
 
-	
-	private String convertStrToNums(String text){
-		//splitting into words and punctuation
-		String [] words = text.split("\\b");
-		for (int i=0; i<words.length; i++){
-			for(String ss: arr){
-				if (words[i].toLowerCase().equals(ss)){
-					words[i] = numStrToInt(ss).toString();	
+	private String convertPlayerNames(String text) {
+		String convertedText = "";
+		String tempText = text.substring(text.indexOf(":"));
+		String tempLeftText = text.substring(0, text.indexOf(":"));
+
+		Pattern pattern = Pattern.compile("[A-Z][a-z]");
+		Matcher matcher = pattern.matcher(tempText);
+
+		while (matcher.find()) {
+
+			System.out.println("word: " + matcher.group().toString());
+			System.out.println(nameChars.toString());
+
+			for (String key : nameChars.keySet()) {
+				String word = matcher.group().toString();
+				if (word.equals(key)) {
+					System.out.println("FOUND SOMETHING");
+
+					tempText = tempText.replace(word, nameChars.get(key)
+							.toString());
 				}
 			}
-			
-		}		
-		
+		}
+		text = tempLeftText + tempText;
+		return text;
+	}
+
+	/*
+	 * 
+	 * public void checkForErrors(){ checkpoint1(getNewText()); }
+	 */
+	/*
+	 * public String getNoun(){ String newText = getNewText(); String result =
+	 * ""; if (totalIsCorrect(newText)){ result = findNoun(newText); } else {
+	 * System.out.println("Could not confirm the number of participants."); }
+	 * return result; }
+	 */
+
+	private String convertStrToNums(String text) {
+		// splitting into words and punctuation
+		String[] words = text.split("\\b");
+		for (int i = 0; i < words.length; i++) {
+			for (String ss : arr) {
+				if (words[i].toLowerCase().equals(ss)) {
+					words[i] = numStrToInt(ss).toString();
+				}
+			}
+
+		}
+
 		StringBuilder sb = new StringBuilder();
-		for (String s: words){
+		for (String s : words) {
 			sb.append(s);
 			sb.append(" ");
 		}
@@ -181,41 +212,26 @@ public class Reader {
 		System.out.println("NEWTEXT" + newText);
 		return newText;
 	}
+
 	/*
-	private String findNoun(String newText){
-		int index=-1; 
-		for(int i=0; i<newText.length();i++){
-			if(newText.contains("-")){
-				index = newText.indexOf("-");
-			} else if (newText.contains("--")){
-				index = newText.indexOf("--");
-			} else if (newText.contains("—")){
-				index = newText.indexOf("—");
-			} else {
-				index=-1;
-			}
-		}
-		
-		if(!(index==-1)){
-			String subStr = newText.substring(0, index);
-			String [] words2 = subStr.split(" ");
-			noun = words2[words2.length-1];
-		}
-		
-		String result2 ="";
-		for(int q=0; q<noun.length()-1; q++){
-			result2 += noun.charAt(q);
-		}
-		
-		noun=result2;
-		
-		System.out.println("NOUN: " + noun);
-		return noun; 
-	}
+	 * private String findNoun(String newText){ int index=-1; for(int i=0;
+	 * i<newText.length();i++){ if(newText.contains("-")){ index =
+	 * newText.indexOf("-"); } else if (newText.contains("--")){ index =
+	 * newText.indexOf("--"); } else if (newText.contains("—")){ index =
+	 * newText.indexOf("—"); } else { index=-1; } }
+	 * 
+	 * if(!(index==-1)){ String subStr = newText.substring(0, index); String []
+	 * words2 = subStr.split(" "); noun = words2[words2.length-1]; }
+	 * 
+	 * String result2 =""; for(int q=0; q<noun.length()-1; q++){ result2 +=
+	 * noun.charAt(q); }
+	 * 
+	 * noun=result2;
+	 * 
+	 * System.out.println("NOUN: " + noun); return noun; }
+	 */
 
-	*/
-
-	private Integer numStrToInt(String numStr){
+	private Integer numStrToInt(String numStr) {
 		hm.put("one", 1);
 		hm.put("first", 1);
 		hm.put("two", 2);
@@ -231,41 +247,38 @@ public class Reader {
 		hm.put("seven", 7);
 		hm.put("seventh", 7);
 		return hm.get(numStr);
-		
-		
-		
 	}
-		
-	
 
-	
-	
 	/*
-	 * This method finds the first number in the text and compares it to the size of the allParticipants array.
-	 * The first digit in the prompt text must be the total number of players.
+	 * This method finds the first number in the text and compares it to the
+	 * size of the allParticipants array. The first digit in the prompt text
+	 * must be the total number of players.
 	 */
 
-	
-	private boolean totalIsCorrect (String newText){
-		getParticipants();
-		
+	private boolean totalIsCorrect(String newText) {
+
 		boolean correct = false;
 		Pattern participantsNum;
 		participantsNum = Pattern.compile("\\d");
 		Matcher m1 = participantsNum.matcher(newText);
 		m1.find();
 		int result = Integer.parseInt(m1.group());
-	
-		if (result == allParticipants.size()){
+
+		if (result == allParticipants.size()) {
 			correct = true;
 		}
-		
+
 		return correct;
 	}
-	
-	/*Private instance variables*/
-	
+
+	public ArrayList<String> setParticipants() {
+		return allParticipants;
+	}
+
+	/* Private instance variables */
+
 	private ArrayList<String> players = new ArrayList<String>();
 	private ArrayList<String> allParticipants = new ArrayList<String>();
-	private HashMap<String , Integer> hm = new HashMap<String , Integer>();	 
+	private HashMap<String, Integer> hm = new HashMap<String, Integer>();
+	private HashMap<String, Character> nameChars = new HashMap<String, Character>();
 }

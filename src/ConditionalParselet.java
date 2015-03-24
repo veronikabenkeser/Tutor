@@ -50,9 +50,9 @@ public class ConditionalParselet implements Parselet {
 		StringBuilder sb = new StringBuilder();
 		sb.append("if(");
 		sb.append(antecedent);
-		sb.append("){");
+		sb.append("){ return (");
 		sb.append(consequent);
-		sb.append("}");
+		sb.append("); \n}");
 		text = sb.toString();
 		return text;
 	}

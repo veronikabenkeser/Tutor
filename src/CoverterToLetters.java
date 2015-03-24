@@ -3,7 +3,7 @@ import java.util.HashMap;
 
 
 public class CoverterToLetters {
-	private ProblemSolver problemSolver;
+	//private ProblemSolver problemSolver;
 
 	private void mapLettersToNumbers(ArrayList<Integer> singleSolutionMBT, HashMap<Integer, String> letterIndex){
 		for(int i=0; i<singleSolutionMBT.size(); i++){

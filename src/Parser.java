@@ -36,25 +36,16 @@ public class Parser {
 
 	private static String ifOnlyIfRegex = "((if)+\\s+(but|or|and)+\\s+only if)";
 
-	private static String orderingGameRegex = "((\\beach\\b|\\bEach\\b)+.*?\\bstudent\\b.*?\\bexactly\\b.?\\b1\\b)";
 
 	private static String[] boundary = { "through", "to" };
 
 	private static String[] gameClassificationKeywords = { "group", "grouped",
 			"order", "ordered" };
 
-	public Parser(Reader reader) {
-		this.reader = reader;
+	public Parser(String newText) {
+		this.newText = newText;
 	}
 
-	public boolean isSimpleOrderingGame() {
-		//noun = reader.getNoun();
-		newText = reader.getNewText();
-
-		Pattern pattern = Pattern.compile(orderingGameRegex);
-		Matcher m = pattern.matcher(reader.getNewText());
-		return (m.find());
-	}
 
 	public void updateSentenceArr() {
 		newText = newText.substring(newText.indexOf(":") + 1);
@@ -80,11 +71,6 @@ public class Parser {
 		}
 	}
 
-	public void totalParse() {
-		updateSentenceArr();
-		// parse1();
-		// System.out.println(parse1());
-	}
 
 	/*
 	 * public String[] separateIntoWords(ArrayList<String> sentenceArr) { String
@@ -98,11 +84,14 @@ public class Parser {
 	 */
 
 	public void doVisibleActions() {
+		updateSentenceArr();
+		initializemParselets();
+				
 		while (!sentenceArr.isEmpty()) {
 			parseInAccordanceWithParselet(createTokens(sentenceArr));
 		}
 
-		System.out.println("Resulting interpretations: " + sentenceArrFinal);
+		System.out.println("Resulting interpretation: " + sentenceArrFinal);
 	}
 
 	public ArrayList<Token> createTokens(ArrayList<String> sentenceArr) {
@@ -111,10 +100,6 @@ public class Parser {
 		boolean continueMakingTokens = true;
 
 		for (int i = 0; i < sentenceArr.size(); i++) {
-			
-			System.out.println("SENTENCE ARR " + sentenceArr.size());
-			System.out.println("SENTENCE ARR " + sentenceArr);
-
 			String sentence = sentenceArr.get(i);
 
 			Pattern pattern0 = Pattern.compile("\\b[A-Z]\\b[^==]+?\\d");
@@ -151,13 +136,6 @@ public class Parser {
 				parselet = mParselets.get("cleanup");
 				System.out
 						.println("Getting the value associated with the cleanup key");
-
-				/*
-				 * System.out.println("Unable to find the correct parselet.");
-				 * sentenceArrFinal.add(sentence);
-				 * System.out.println("HERE ARE ALL THE FINAL RULES: " +
-				 * sentenceArrFinal);
-				 */
 			}
 			Token t = new Token(text, parselet);
 			allTokens.add(t);
@@ -168,7 +146,7 @@ public class Parser {
 
 	public void parseInAccordanceWithParselet(ArrayList<Token> allTokens) {
 		for (Token t : allTokens) {
-			segment(t);
+			if(t.getParselet()!=null) segment(t);
 		}
 		allTokens.removeAll(allTokens);
 	}
@@ -199,9 +177,37 @@ public class Parser {
 		mParselets.put("conjunction", new ConjunctionParselet());
 		mParselets.put("cleanup", new CodeCleanUpParselet());
 	}
+	
+	public  ArrayList<String> setFinalRules(){
+		return sentenceArrFinal;
+	}
+	
+	/*
+	 * This method assigns a number to each participant.
+	 * For example, if the letterIndex hashmap says that the key G has the value 0, 
+	 * that means that G is always at index 0.
+	 */
+	private void createLetterIndex(){
+		for (int i=0; i<allParticipants.size(); i++){
+			letterIndex.put(allParticipants.get(i), i);
+		}
+	}
+	
+
+	
+	public HashMap<String, Integer> setLetterIndex(){
+		createLetterIndex();
+		return letterIndex ;
+	}
+	
+	/*Private instance variables */
+
+	private final ArrayList<Integer> nodes = new ArrayList<Integer>();
+	private HashMap<String, Integer> letterIndex = new HashMap<String, Integer>();
 
 	private HashMap<String, Parselet> mParselets = new HashMap<String, Parselet>();
 	public ArrayList<String> sentenceArr = new ArrayList<String>();
 	private ArrayList<Token> allTokens = new ArrayList<Token>();
 	private ArrayList<String> sentenceArrFinal = new ArrayList<String>();
+	private HashMap<Integer, String> allParticipants = new HashMap<Integer, String>();
 }

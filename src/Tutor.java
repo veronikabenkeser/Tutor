@@ -8,13 +8,12 @@ public class Tutor {
 	private Gui gui;
 	private AutomaticRulesWriter autoRulesWriter;
 	private Permutations permutations;
-	private ProblemSolver problemSolver;
+	//private ProblemSolver problemSolver;
 	private Parser parser;
 	private ArrayList<String> sentenceArr;
 	
 	public Tutor(){
 		initComponents();
-		solveGame();
 	}
 	
 	private void initComponents() {
@@ -24,22 +23,6 @@ public class Tutor {
 		gui.setVisible(true);	
 	}
 
-	private void solveGame(){
-		//rules = new Rules();
-		parser = new Parser(reader);
-		//parser.isSimpleOrderingGame();
-		//reader.checkForErrors();
-		
-		parser.isSimpleOrderingGame();
-		parser.totalParse();
-		parser.initializemParselets();
-		parser.doVisibleActions();
-		
-	    //nodes = rules.getNodes();
-	    //permutations = new Permutations(nodes);
-		//problemSolver= new ProblemSolver(nodes, permutations, rules);
-		//problemSolver.getSolution(nodes);
-	}
 	public static void main(final String[] args) {
 		
 		SwingUtilities.invokeLater(new Runnable() {
@@ -48,7 +31,5 @@ public class Tutor {
 				new Tutor();
 			}
 		});
-	}
-	
-	private ArrayList<Integer>nodes  = new ArrayList<Integer>();
+	}	
 }
