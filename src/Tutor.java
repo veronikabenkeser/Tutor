@@ -6,12 +6,7 @@ import javax.swing.SwingUtilities;
 public class Tutor {
 	private Reader reader;
 	private Gui gui;
-	private AutomaticRulesWriter autoRulesWriter;
-	private Permutations permutations;
-	//private ProblemSolver problemSolver;
-	private Parser parser;
-	private ArrayList<String> sentenceArr;
-	
+
 	public Tutor(){
 		initComponents();
 	}

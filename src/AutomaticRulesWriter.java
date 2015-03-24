@@ -13,7 +13,9 @@ public class AutomaticRulesWriter {
 	}
 
 	// System.out.println(new File(".").getAbsolutePath());
-	public void printRulesToFile() {
+	public AutomaticRules printRulesToFile() {
+		AutomaticRules a = null;
+		
 		File file = new File(
 				"C:\\Users\\Robert\\Desktop\\Veronika's Folder\\my cognitive tutor\\workspace\\Main\\src\\AutomaticRules.java");
 		PrintWriter pw = null;
@@ -29,19 +31,12 @@ public class AutomaticRulesWriter {
 					+ "\n public boolean getIsValid(final ArrayList<Integer> nodes){"
 					+ "\n return isValid(nodes);"
 					+ "\n }"
-					+ "\n public final ArrayList<Integer> setNodes(){"
-					+ "\n for (int i=0; i<mLetterIndex.size(); i++){"
-					+ "\n nodes.add(i);"
-					+ "\n }"
-					+ "\n return nodes;"
-					+ "\n }"
 					+ "\n"
 					+ setRules()
 					+ "\n"
 					+ followRules()
 					+ "\n"
 					+ "\n private final ArrayList<Integer> nodes = new ArrayList<Integer>();"
-					+ "\n private HashMap<Integer, String> mLetterIndex = new HashMap<Integer, String>();"
 					+ "\n }");
 			pw.flush();
 			// System.out.println(pw.checkError());
@@ -52,8 +47,15 @@ public class AutomaticRulesWriter {
 				pw.close();
 			}
 		}
+		a = new AutomaticRules();
+		return a;
 	}
-
+/*
+	public void setLetterIndex(){
+		mLetterIndex = parser.setLetterIndex();
+		System.out.println("LETTEr INDEX : " + mLetterIndex);
+	}
+*/
 	private String assignedIndex() {
 		String result = "";
 		StringBuilder sb = new StringBuilder();
@@ -69,11 +71,11 @@ public class AutomaticRulesWriter {
 	private String followRules() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("final boolean isValid(final ArrayList<Integer> nodes) {");
-		sb.append("\n return ");
+		sb.append("\n return (");
 		for (int i = 0; i < mSentenceArrFinal.size(); i++) {
 
 			if (i == mSentenceArrFinal.size() - 1) {
-				sb.append("rule" + i + "(nodes);");
+				sb.append("rule" + i + "(nodes));");
 			} else {
 				sb.append("rule" + i + "(nodes) && ");
 			}
@@ -110,7 +112,6 @@ public class AutomaticRulesWriter {
 		return sb.toString();
 	}
 
-	private HashMap<String, Integer> mLetterIndex = new HashMap<String, Integer>();
 	private final ArrayList<Integer> nodes = new ArrayList<Integer>();
 	private ArrayList<String> mAllParticipants = new ArrayList<String>();
 	private ArrayList<String> mSentenceArrFinal = new ArrayList<String>();

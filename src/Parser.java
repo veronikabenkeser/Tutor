@@ -187,24 +187,28 @@ public class Parser {
 	 * For example, if the letterIndex hashmap says that the key G has the value 0, 
 	 * that means that G is always at index 0.
 	 */
+	/*
 	private void createLetterIndex(){
+		allParticipants = reader.setParticipants();
+		System.out.println("! all participants " + allParticipants);
 		for (int i=0; i<allParticipants.size(); i++){
 			letterIndex.put(allParticipants.get(i), i);
+			System.out.println("HOW ABOUT NOW? : allParticipants: " + allParticipants + "letterIndex: " + letterIndex);
 		}
 	}
 	
-
-	
+*/
+	/*
 	public HashMap<String, Integer> setLetterIndex(){
 		createLetterIndex();
+		System.out.println("letterindex while in parser: " + letterIndex);
 		return letterIndex ;
 	}
+	*/
 	
 	/*Private instance variables */
 
-	private final ArrayList<Integer> nodes = new ArrayList<Integer>();
 	private HashMap<String, Integer> letterIndex = new HashMap<String, Integer>();
-
 	private HashMap<String, Parselet> mParselets = new HashMap<String, Parselet>();
 	public ArrayList<String> sentenceArr = new ArrayList<String>();
 	private ArrayList<Token> allTokens = new ArrayList<Token>();

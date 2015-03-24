@@ -8,16 +8,26 @@ import java.util.List;
  * how-do-i-write-a-program-to-solve-multiple-questions and https://ideone.com/wwxG0
  */
 public class Permutations {
-	 private final ArrayList<Integer> arrToTest;
      private boolean perms = true;
 
      public boolean hasPerms() {
          return perms;
      }
-
-     Permutations(ArrayList<Integer> arrToTest) {
-     	this.arrToTest=arrToTest;
+     
+     public Permutations(ArrayList<Integer> nodes){
+    	 arrToTest = nodes;
      }
+     
+
+     /*
+     public ArrayList<Integer>getArrToTest(){
+    	 arrToTest = ar.setNodes();
+    	 return arrToTest;
+     }
+     */
+     //public Permutations(ArrayList<Integer> arrToTest) {
+     //	this.arrToTest=arrToTest;
+    // }
 
      /*
       * This method calculates the next Permutation. For example, if our initial list is 
@@ -82,4 +92,6 @@ public class Permutations {
  /*Private instance variables*/
 private HashMap<Integer, String> myMap = new HashMap<Integer, String>();
 private  ArrayList<String> variations;
+private ArrayList<Integer> arrToTest = new ArrayList<Integer>();
+
 }

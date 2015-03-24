@@ -65,8 +65,25 @@ public class Reader {
 					parser.doVisibleActions();
 					AutomaticRulesWriter rw = new AutomaticRulesWriter(
 							allParticipants, parser);
-					rw.printRulesToFile();
-					// Permutations permutations = new Permutations();
+
+					// rw.setLetterIndex();
+					AutomaticRules ar = rw.printRulesToFile();
+					// AutomaticRules ar = new rw.printRulesToFile();
+
+					// AutomaticRules ar = new AutomaticRules();
+					nodes.removeAll(nodes);
+					nodes = setNodes();
+					System.out.println("NODES NODES: " + nodes);
+					Permutations permutations = new Permutations(nodes);
+					// permutations.getRules();
+
+					// nodes = permutations.getArrToTest();
+
+					ProblemSolver problemSolver = new ProblemSolver(nodes,
+							permutations, ar);
+					problemSolver.getSolution(nodes);
+					problemSolver.getSingleSolutionMBT();
+					System.out.println("BIRD! ");
 
 				} else {
 					System.out
@@ -138,6 +155,7 @@ public class Reader {
 	}
 
 	private void getParticipants() {
+		nameChars.remove(nameChars);
 		namesOfPlayers();
 		for (int i = 0; i < players.size(); i++) {
 			char ch = (players.get(i).charAt(0));
@@ -145,6 +163,14 @@ public class Reader {
 			nameChars.put(players.get(i), players.get(i).charAt(0));
 		}
 		System.out.println(allParticipants);
+	}
+
+	public ArrayList<Integer> setNodes() {
+		for (int i = 1; i <= allParticipants.size(); i++) {
+			nodes.add(i);
+		}
+		System.out.println("NODES??:" + nodes);
+		return nodes;
 	}
 
 	public String getNewText(String text) {
@@ -281,4 +307,6 @@ public class Reader {
 	private ArrayList<String> allParticipants = new ArrayList<String>();
 	private HashMap<String, Integer> hm = new HashMap<String, Integer>();
 	private HashMap<String, Character> nameChars = new HashMap<String, Character>();
+	private ArrayList<Integer> nodes = new ArrayList<Integer>();
+
 }
