@@ -86,8 +86,8 @@ public class Reader {
 							permutations, new AutomaticRules());
 					problemSolver.getSolution(nodes);
 					problemSolver.getSingleSolutionMBT();
-					//CoverterToLetters conv = new CoverterToLetters(problemSolver, setParticipants());
-					//conv.getPublicSolInLetters();
+					CoverterToLetters conv = new CoverterToLetters(problemSolver, setParticipants());
+					conv.getPublicSolInLetters();
 
 				} else {
 					System.out
@@ -142,7 +142,7 @@ public class Reader {
 		return matcher.find();
 	}
 
-	private void namesOfPlayers() {
+	private ArrayList<String> namesOfPlayers() {
 		String text = showPrompt();
 		Pattern pattern = Pattern.compile("(-).*(-)");
 		Matcher matcher = pattern.matcher(text);
@@ -156,11 +156,14 @@ public class Reader {
 			players.add(player);
 			System.out.println("players: " + players);
 		}
+		return players;
 	}
 
 	private void getParticipants() {
 		nameChars.clear();
-		namesOfPlayers();
+		players = namesOfPlayers();
+		
+		System.out.println("PLAYERS HERE: " + players);
 		for (int i = 0; i < players.size(); i++) {
 			char ch = (players.get(i).charAt(0));
 			allParticipants.add(i, Character.toString(ch));
