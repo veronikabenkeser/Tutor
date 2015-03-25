@@ -20,17 +20,19 @@ public class ProblemSolver {
 	 * Rules class.
 	 */
 	private void findSolution(ArrayList<Integer> nodes) {
+		System.out.println("CATS EVEryWHERE !!");
 		while (permutations.hasPerms()) {
+			
+			System.out.println("CAT1");
+			System.out.println("nodes : " + nodes);
 			if (rules.getIsValid(nodes)) {
-				ArrayList<Integer> nodesHolder = new ArrayList<Integer>();
-				nodesHolder = (ArrayList<Integer>) nodes.clone();
-				solutionsArr.add(nodesHolder);
+				solutionsArr.add(new ArrayList<Integer>(nodes)); //we must add the nodes this way in order for the solutionsArr to populate correctly.
 			}
 			nodes = permutations.nextPerm();
 		}
-		System.out.println("SOLUTIONS ARR" + solutionsArr);
+		System.out.println("Solutions array : " + solutionsArr);
 	}
-
+	
 	private ArrayList<Integer> calcSingleSol() {
 		int k = 0;
 		if (k < nodes.size()) {
@@ -66,9 +68,9 @@ public class ProblemSolver {
 		} else {
 			System.out.println("solutions arr for MBT: " + solutionsArrMBT);
 		}
-
 		return solutionsArrMBT;
 	}
+	
 
 	public ArrayList<Integer> getSingleSolutionMBT() {
 		return calcSingleSol();
@@ -85,6 +87,7 @@ public class ProblemSolver {
 	}
 
 	private HashMap<Integer, String> myMap = new HashMap<Integer, String>();
-	private ArrayList<ArrayList<Integer>> solutionsArr = new ArrayList<ArrayList<Integer>>();
 	private ArrayList<Integer> solutionsArrMBT = new ArrayList<Integer>();
+	private ArrayList<ArrayList<Integer>> solutionsArr = new ArrayList<ArrayList<Integer>>();
+
 }

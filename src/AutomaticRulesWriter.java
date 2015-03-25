@@ -70,7 +70,7 @@ public class AutomaticRulesWriter {
 
 	private String followRules() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("final boolean isValid(final ArrayList<Integer> nodes) {");
+		sb.append(" boolean isValid(final ArrayList<Integer> nodes) {");
 		sb.append("\n return (");
 		for (int i = 0; i < mSentenceArrFinal.size(); i++) {
 
@@ -89,9 +89,9 @@ public class AutomaticRulesWriter {
 		for (String s : mSentenceArrFinal) {
 
 			if (s.contains("if")) {
-				sb.append("private final boolean rule");
+				sb.append("private boolean rule");
 				sb.append(mSentenceArrFinal.indexOf(s));
-				sb.append("(final ArrayList<Integer> nodes) {");
+				sb.append("( final ArrayList<Integer> nodes) {");
 				sb.append("\n boolean result = false; ");
 				sb.append("\n");
 				sb.append(s);
@@ -99,9 +99,9 @@ public class AutomaticRulesWriter {
 				sb.append("\n }");
 				sb.append(" \n ");
 			} else {
-				sb.append("private final boolean rule");
+				sb.append(" private boolean rule");
 				sb.append(mSentenceArrFinal.indexOf(s));
-				sb.append("(final ArrayList<Integer> nodes) {");
+				sb.append(" ( final ArrayList<Integer> nodes) {");
 				sb.append("\n return (");
 				sb.append(s);
 				sb.append(");");

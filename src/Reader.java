@@ -63,27 +63,31 @@ public class Reader {
 				if (totalIsCorrect(newText) && isSimpleOrderingGame(newText)) {
 					Parser parser = new Parser(newText);
 					parser.doVisibleActions();
+
 					AutomaticRulesWriter rw = new AutomaticRulesWriter(
 							allParticipants, parser);
 
 					// rw.setLetterIndex();
-					AutomaticRules ar = rw.printRulesToFile();
+					//AutomaticRules ar = rw.printRulesToFile();
 					// AutomaticRules ar = new rw.printRulesToFile();
+
+					rw.printRulesToFile();
 
 					// AutomaticRules ar = new AutomaticRules();
 					nodes.removeAll(nodes);
 					nodes = setNodes();
 					System.out.println("NODES NODES: " + nodes);
 					Permutations permutations = new Permutations(nodes);
+					System.out.println("im here 1");
 					// permutations.getRules();
-
 					// nodes = permutations.getArrToTest();
-
+					//AutomaticRules ar = new AutomaticRules();
 					ProblemSolver problemSolver = new ProblemSolver(nodes,
-							permutations, ar);
+							permutations, new AutomaticRules());
 					problemSolver.getSolution(nodes);
 					problemSolver.getSingleSolutionMBT();
-					System.out.println("BIRD! ");
+					//CoverterToLetters conv = new CoverterToLetters(problemSolver, setParticipants());
+					//conv.getPublicSolInLetters();
 
 				} else {
 					System.out
@@ -155,18 +159,19 @@ public class Reader {
 	}
 
 	private void getParticipants() {
-		nameChars.remove(nameChars);
+		nameChars.clear();
 		namesOfPlayers();
 		for (int i = 0; i < players.size(); i++) {
 			char ch = (players.get(i).charAt(0));
 			allParticipants.add(i, Character.toString(ch));
 			nameChars.put(players.get(i), players.get(i).charAt(0));
 		}
-		System.out.println(allParticipants);
+		System.out.println("all participants!!!!!!!!!!!!!! " + allParticipants);
+		System.out.println("nameChars!!!!!! " + nameChars);
 	}
 
 	public ArrayList<Integer> setNodes() {
-		for (int i = 1; i <= allParticipants.size(); i++) {
+		for (int i =1; i <= allParticipants.size(); i++) {
 			nodes.add(i);
 		}
 		System.out.println("NODES??:" + nodes);
@@ -190,7 +195,7 @@ public class Reader {
 		while (matcher.find()) {
 
 			System.out.println("word: " + matcher.group().toString());
-			System.out.println(nameChars.toString());
+			System.out.println("NAME CHARS AGAIN?? "  + nameChars.toString());
 
 			for (String key : nameChars.keySet()) {
 				String word = matcher.group().toString();
