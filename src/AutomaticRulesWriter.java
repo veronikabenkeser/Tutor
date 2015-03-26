@@ -4,8 +4,10 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class AutomaticRulesWriter {
-	Parser parser;
+public class AutomaticRulesWriter implements Runnable {
+	private Parser parser;
+	private AutomaticRules a;
+	private ArrayList<String> tempList = new ArrayList<String>();
 
 	public AutomaticRulesWriter(ArrayList<String> allParticipants, Parser parser) {
 		mAllParticipants = allParticipants;
@@ -13,9 +15,10 @@ public class AutomaticRulesWriter {
 	}
 
 	// System.out.println(new File(".").getAbsolutePath());
-	public AutomaticRules printRulesToFile() {
-		AutomaticRules a = null;
-		
+	public void printRulesToFile() {
+		// a= null;
+		tempList.clear();
+
 		File file = new File(
 				"C:\\Users\\Robert\\Desktop\\Veronika's Folder\\my cognitive tutor\\workspace\\Main\\src\\AutomaticRules.java");
 		PrintWriter pw = null;
@@ -39,6 +42,7 @@ public class AutomaticRulesWriter {
 					+ "\n private final ArrayList<Integer> nodes = new ArrayList<Integer>();"
 					+ "\n }");
 			pw.flush();
+			file.setExecutable(true);
 			// System.out.println(pw.checkError());
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -47,15 +51,24 @@ public class AutomaticRulesWriter {
 				pw.close();
 			}
 		}
-		a = new AutomaticRules();
-		return a;
+		synchronized (tempList) {
+			// a= new AutomaticRules();
+			tempList.add("first item");
+			System.out.println("tempList " + tempList.toString());
+			tempList.notifyAll();
+			System.out.println("notifyAll called!");
+		}
+		// return a;
 	}
-/*
-	public void setLetterIndex(){
-		mLetterIndex = parser.setLetterIndex();
-		System.out.println("LETTEr INDEX : " + mLetterIndex);
+
+	public ArrayList<String> getTempList() {
+		return tempList;
 	}
-*/
+
+	/*
+	 * public void setLetterIndex(){ mLetterIndex = parser.setLetterIndex();
+	 * System.out.println("LETTEr INDEX : " + mLetterIndex); }
+	 */
 	private String assignedIndex() {
 		String result = "";
 		StringBuilder sb = new StringBuilder();
@@ -115,4 +128,18 @@ public class AutomaticRulesWriter {
 	private final ArrayList<Integer> nodes = new ArrayList<Integer>();
 	private ArrayList<String> mAllParticipants = new ArrayList<String>();
 	private ArrayList<String> mSentenceArrFinal = new ArrayList<String>();
+
+	@Override
+	public void run() {
+		System.out.println("myThread started..");
+		printRulesToFile();
+		System.out.println("myThread started..2");
+		System.out.println("myThread started..3");
+
+		try {
+			Thread.sleep(100);
+		} catch (InterruptedException ex) {
+			ex.printStackTrace();
+		}
+	}
 }

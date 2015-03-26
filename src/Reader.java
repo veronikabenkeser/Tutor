@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.swing.SwingUtilities;
+
 /*
  * This class reads a given text file--as long as it is formatted the same way-- and modifies it.
  * The class also extracts players' names and calculates the number of players from the text.
@@ -34,8 +36,6 @@ public class Reader {
 		BufferedReader rd = null;
 
 		try {
-			// String b= ".txt";
-			// a+=b;
 			file = new File(a);
 			rd = new BufferedReader(new FileReader(a));
 			StringBuilder sb = new StringBuilder();
@@ -61,34 +61,41 @@ public class Reader {
 				System.out.println("THIS IS THE LOADED TEXT " + newText);
 
 				if (totalIsCorrect(newText) && isSimpleOrderingGame(newText)) {
-					Parser parser = new Parser(newText);
+					final Parser parser = new Parser(newText); // added "final"
 					parser.doVisibleActions();
 
 					AutomaticRulesWriter rw = new AutomaticRulesWriter(
 							allParticipants, parser);
 
-					// rw.setLetterIndex();
-					//AutomaticRules ar = rw.printRulesToFile();
-					// AutomaticRules ar = new rw.printRulesToFile();
+					Thread myThread = new Thread(rw);
+					myThread.start();
 
-					rw.printRulesToFile();
+					ArrayList<String> tempList = rw.getTempList();
+					synchronized (tempList) {
+						while (tempList.isEmpty()) {
+							try {
+								tempList.wait();
+							} catch (InterruptedException e) {
+							}
+						}
+					}
 
-					// AutomaticRules ar = new AutomaticRules();
+					try {
+						Thread.sleep(100);
+					} catch (InterruptedException ex) {
+						ex.printStackTrace();
+					}
+					AutomaticRules ar = new AutomaticRules();
 					nodes.removeAll(nodes);
 					nodes = setNodes();
 					System.out.println("NODES NODES: " + nodes);
 					Permutations permutations = new Permutations(nodes);
 					System.out.println("im here 1");
-					// permutations.getRules();
-					// nodes = permutations.getArrToTest();
-					//AutomaticRules ar = new AutomaticRules();
 					ProblemSolver problemSolver = new ProblemSolver(nodes,
-							permutations, new AutomaticRules());
-					problemSolver.getSolution(nodes);
-					problemSolver.getSingleSolutionMBT();
-					CoverterToLetters conv = new CoverterToLetters(problemSolver, setParticipants());
-					conv.getPublicSolInLetters();
+							permutations, setParticipants());
+					problemSolver.getAllAnswers(nodes);
 
+					System.out.println("DONE RUNNING NOW!");
 				} else {
 					System.out
 							.println("The program either could not confirm the number of active participants or"
@@ -162,7 +169,7 @@ public class Reader {
 	private void getParticipants() {
 		nameChars.clear();
 		players = namesOfPlayers();
-		
+
 		System.out.println("PLAYERS HERE: " + players);
 		for (int i = 0; i < players.size(); i++) {
 			char ch = (players.get(i).charAt(0));
@@ -174,7 +181,7 @@ public class Reader {
 	}
 
 	public ArrayList<Integer> setNodes() {
-		for (int i =1; i <= allParticipants.size(); i++) {
+		for (int i = 1; i <= allParticipants.size(); i++) {
 			nodes.add(i);
 		}
 		System.out.println("NODES??:" + nodes);
@@ -198,7 +205,7 @@ public class Reader {
 		while (matcher.find()) {
 
 			System.out.println("word: " + matcher.group().toString());
-			System.out.println("NAME CHARS AGAIN?? "  + nameChars.toString());
+			System.out.println("NAME CHARS AGAIN?? " + nameChars.toString());
 
 			for (String key : nameChars.keySet()) {
 				String word = matcher.group().toString();
@@ -316,5 +323,4 @@ public class Reader {
 	private HashMap<String, Integer> hm = new HashMap<String, Integer>();
 	private HashMap<String, Character> nameChars = new HashMap<String, Character>();
 	private ArrayList<Integer> nodes = new ArrayList<Integer>();
-
 }

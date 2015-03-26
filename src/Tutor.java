@@ -1,3 +1,35 @@
+/*import java.util.ArrayList;
+
+import javax.swing.SwingUtilities;
+
+
+public class Tutor {
+	
+
+
+	public static void main(final String[] args) {
+		final Reader reader = new Reader();
+		
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				Gui gui = new Gui(reader);
+				gui.createAndShowGUI();		
+				gui.setVisible(true);
+			}
+		});
+	}
+	
+	
+}
+
+
+
+*/
+
+
+
+
 import java.util.ArrayList;
 
 import javax.swing.SwingUtilities;
@@ -26,5 +58,9 @@ public class Tutor {
 				new Tutor();
 			}
 		});
-	}	
+	}
+	
+	
 }
+
+

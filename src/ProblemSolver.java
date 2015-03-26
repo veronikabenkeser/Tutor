@@ -5,26 +5,26 @@ import java.util.List;
 
 public class ProblemSolver {
 	private Permutations permutations;
-	private AutomaticRules rules;
+	//private AutomaticRules rules;
 	private ArrayList<Integer> nodes;
+	private HashMap<Integer, Integer> mMap;
 
-	public ProblemSolver(ArrayList<Integer> nodes, Permutations permutations,
-			AutomaticRules rules) {
+	public ProblemSolver(ArrayList<Integer> nodes, Permutations permutations, ArrayList<String>  participants) {
 		this.permutations = permutations;
-		this.rules = rules;
+		//this.rules = rules;
 		this.nodes = nodes;
+		mParticipants = participants;
 	}
 
 	/*
 	 * This method finds all the permutations that fit the rules outlined in the
-	 * Rules class.
+	 * AutomaticRules class.
 	 */
-	private void findSolution(ArrayList<Integer> nodes) {
-		System.out.println("CATS EVEryWHERE !!");
+	public void findSolution(ArrayList<Integer> nodes) {
+		AutomaticRules rules = new AutomaticRules();
+		
 		while (permutations.hasPerms()) {
 			
-			System.out.println("CAT1");
-			System.out.println("nodes : " + nodes);
 			if (rules.getIsValid(nodes)) {
 				solutionsArr.add(new ArrayList<Integer>(nodes)); //we must add the nodes this way in order for the solutionsArr to populate correctly.
 			}
@@ -33,13 +33,78 @@ public class ProblemSolver {
 		System.out.println("Solutions array : " + solutionsArr);
 	}
 	
+	private boolean oneSolExists(){
+		boolean result = false;
+		if (solutionsArr.size() == 1) {
+			solutionsArrMBT.addAll(solutionsArr.get(0));
+			result = true;
+		}
+		return result;
+	}
+	
+	private HashMap<Integer, Integer> determineIndivMBT(ArrayList<ArrayList<Integer>> solutionsArr){
+		mMap = new HashMap<Integer, Integer>();
+		
+		int k = 0;
+		if (k < nodes.size()) {
+
+			//if (solutionsArr.size() == 1) {
+			//	solutionsArrMBT.addAll(solutionsArr.get(0));
+			//}
+
+			for (int i = 0; i < solutionsArr.size() - 1; i++) {
+				if (solutionsArr.get(i).get(k) == solutionsArr.get(i + 1)
+						.get(k)) {
+					// System.out.println("i" + i);
+					// System.out.println(solutionsArr.size()-2);
+					if (i == solutionsArr.size() - 2) {
+						
+						System.out.println("TRUE"); //found a repeated number/letter
+
+						mMap.put(k, solutionsArr.get(i).get(k));
+						System.out.println("mMap : " + mMap);
+						k++;
+						if (k == nodes.size())
+							break;
+					}
+				} else {
+					k++;
+					i--;
+					// System.out.println("i is " + i);
+					// System.out.println("k is "+k);
+					if (k == nodes.size())
+						break;
+				}
+			}
+		}
+		return mMap;
+	}
+	
+	public void getAllAnswers(ArrayList<Integer> nodes){
+		findSolution(nodes);//updates the solutionsArr
+		
+		CoverterToLetters conv = new CoverterToLetters(mParticipants);
+		conv.updateletterIndexMap();
+		
+		if (oneSolExists()){
+			System.out.println("Answer: " + solutionsArrMBT);
+			conv.mapLettersToNumbers(solutionsArrMBT);
+			
+		} else {
+			mMap =determineIndivMBT(solutionsArr);
+			if(!mMap.isEmpty()){
+				conv.mapLettersToNumbers(mMap);
+			}
+		}
+	}
+	
 	private ArrayList<Integer> calcSingleSol() {
 		int k = 0;
 		if (k < nodes.size()) {
 
-			if (solutionsArr.size() == 1) {
-				solutionsArrMBT.addAll(solutionsArr.get(0));
-			}
+			//if (solutionsArr.size() == 1) {
+			//	solutionsArrMBT.addAll(solutionsArr.get(0));
+			//}
 
 			for (int i = 0; i < solutionsArr.size() - 1; i++) {
 				if (solutionsArr.get(i).get(k) == solutionsArr.get(i + 1)
@@ -81,13 +146,12 @@ public class ProblemSolver {
 	}
 
 	public ArrayList<Integer> getSolutionsArrMBT() {
-		System.out
-				.println("Getting value of ProblemSolver.getSOlutionsArrMBT()");
-		return this.solutionsArrMBT;
+		return solutionsArrMBT;
 	}
 
-	private HashMap<Integer, String> myMap = new HashMap<Integer, String>();
+	//private HashMap<Integer, Integer> mMap = new HashMap<Integer, Integer>();
 	private ArrayList<Integer> solutionsArrMBT = new ArrayList<Integer>();
 	private ArrayList<ArrayList<Integer>> solutionsArr = new ArrayList<ArrayList<Integer>>();
+	private ArrayList<String> mParticipants = new ArrayList<String>();
 
 }

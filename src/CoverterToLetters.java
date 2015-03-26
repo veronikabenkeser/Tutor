@@ -4,42 +4,65 @@ import java.util.HashMap;
 public class CoverterToLetters {
 	private ProblemSolver problemSolver;
 	
-	public CoverterToLetters(ProblemSolver problemSolver, ArrayList<String> aa){
-		this.problemSolver = problemSolver;
+	//public CoverterToLetters(ProblemSolver problemSolver, ArrayList<String> aa){
+		//this.problemSolver = problemSolver;
+		//mAllParticipants = aa;
+	//}
+	
+	public CoverterToLetters(ArrayList<String> aa){
 		mAllParticipants = aa;
 	}
 
-	private void updateSingleSolMBTArr(){
-		singleSolutionMBT = problemSolver.getSolutionsArrMBT();
-	}
+	//private void updateSingleSolMBTArr(){
+	//	singleSolutionMBT = problemSolver.getSolutionsArrMBT();
+	//}
 	
-	private void updateletterIndexMap(){
+	public void updateletterIndexMap(){
 		//getParticipants();
 		for(int i =0; i<mAllParticipants.size(); i++){
 			letterIndexMap.put(i, mAllParticipants.get(i));
 		}
 		System.out.println(letterIndexMap);
 	}
-	
-	private void mapLettersToNumbers(){
-		updateletterIndexMap();
-		updateSingleSolMBTArr();
-		
-		for(int i=0; i<singleSolutionMBT.size(); i++){
-			singleSolutionMBTLettersMap.put(singleSolutionMBT.get(i), letterIndexMap.get(i));
+
+	public void mapLettersToNumbers(ArrayList<Integer> solutionsArrMBT) {
+		//updateletterIndexMap();
+		// updateSingleSolMBTArr();
+		for (int i = 0; i < solutionsArrMBT.size(); i++) {
+			singleSolutionMBTLettersMap.put(solutionsArrMBT.get(i),
+					letterIndexMap.get(i));
 		}
-		System.out.println("singleSolutionMBTLettersMap " + singleSolutionMBTLettersMap);
-		
-		for(int i=1; i<=letterIndexMap.size(); i++){
+		System.out.println("singleSolutionMBTLettersMap "
+				+ singleSolutionMBTLettersMap);
+
+		for (int i = 1; i <= letterIndexMap.size(); i++) {
 			singleSolutionMBTLettersArr.add(singleSolutionMBTLettersMap.get(i));
-		}		
+		}
+		System.out.println("singleSolutionMBTLettersArr"
+				+ singleSolutionMBTLettersArr);
 	}
-	
-	public ArrayList<String> getPublicSolInLetters(){
-		mapLettersToNumbers();
-		System.out.println("HERE IS THE SOL IN LETTERS: " + singleSolutionMBTLettersArr );
-		return singleSolutionMBTLettersArr;
+
+	public void mapLettersToNumbers(HashMap<Integer, Integer> mMap) {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < letterIndexMap.size(); i++) {
+			if(mMap.containsKey(i)){
+				sb.append(letterIndexMap.get(i));
+				sb.append(" is ");
+				sb.append(mMap.get(i));
+			}
+		}
+		System.out.println(sb.toString());
 	}
+	//public void getPublicSolInLetters(){
+	//	mapLettersToNumbers();
+	//	if (!singleSolutionMBTLettersArr.isEmpty()){
+	//		System.out.println("HERE IS THE SOL IN LETTERS: " + singleSolutionMBTLettersArr );
+	//	} else {
+			
+	//	}
+		
+		
+	//}
 	
 	private ArrayList<Integer>singleSolutionMBT = new ArrayList<Integer>();
 	private ArrayList<String> singleSolutionMBTLettersArr = new ArrayList<String>();
