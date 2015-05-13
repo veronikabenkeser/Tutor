@@ -10,6 +10,8 @@ import java.util.List;
 public class Permutations {
      private boolean perms = true;
 
+     private int nodes;
+
      public boolean hasPerms() {
          return perms;
      }
@@ -18,6 +20,9 @@ public class Permutations {
     	 arrToTest = nodes;
      }
      
+     public ArrayList<Integer> getNodes(){
+    	 return arrToTest;
+     }
 
      /*
      public ArrayList<Integer>getArrToTest(){

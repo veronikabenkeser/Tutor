@@ -58,44 +58,17 @@ public class Reader {
 				String text = showPrompt();
 				String newText = getNewText(text);
 
-				System.out.println("THIS IS THE LOADED TEXT " + newText);
-
 				if (totalIsCorrect(newText) && isSimpleOrderingGame(newText)) {
 					final Parser parser = new Parser(newText); // added "final"
 					parser.doVisibleActions();
-
-					AutomaticRulesWriter rw = new AutomaticRulesWriter(
-							allParticipants, parser);
-
-					Thread myThread = new Thread(rw);
-					myThread.start();
-
-					ArrayList<String> tempList = rw.getTempList();
-					synchronized (tempList) {
-						while (tempList.isEmpty()) {
-							try {
-								tempList.wait();
-							} catch (InterruptedException e) {
-							}
-						}
-					}
-
-					try {
-						Thread.sleep(100);
-					} catch (InterruptedException ex) {
-						ex.printStackTrace();
-					}
-					AutomaticRules ar = new AutomaticRules();
+					
 					nodes.removeAll(nodes);
 					nodes = setNodes();
-					System.out.println("NODES NODES: " + nodes);
+					System.out.println("NODES: " + nodes);
 					Permutations permutations = new Permutations(nodes);
-					System.out.println("im here 1");
-					ProblemSolver problemSolver = new ProblemSolver(nodes,
-							permutations, setParticipants());
-					problemSolver.getAllAnswers(nodes);
-
-					System.out.println("DONE RUNNING NOW!");
+					ProblemSolver ps = new ProblemSolver(allParticipants, parser, permutations);
+					ps.findMBT(ps.setAllPossibleSolutions());
+					
 				} else {
 					System.out
 							.println("The program either could not confirm the number of active participants or"
@@ -144,11 +117,11 @@ public class Reader {
 
 	private boolean isSimpleOrderingGame(String newText) {
 		Pattern pattern = Pattern
-				.compile("(each|Each)+.*(exactly|Exactly).*(1)");
+				.compile("(each|Each)+.*(exactly|Exactly).*");
 		Matcher matcher = pattern.matcher(newText);
-		return matcher.find();
+		return matcher.find();		
 	}
-
+				
 	private ArrayList<String> namesOfPlayers() {
 		String text = showPrompt();
 		Pattern pattern = Pattern.compile("(-).*(-)");
