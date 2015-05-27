@@ -7,6 +7,7 @@ public class CodeCleanUpParselet implements Parselet {
 	@Override
 	public String parse(String text) {
 		//text = addSemicolon(removePeriod(text));
+
 		//if (text.contains(".")){
 		//	text = removePeriod(text);
 		//}
@@ -36,3 +37,5 @@ public class CodeCleanUpParselet implements Parselet {
 	}
 	*/
 }
+
+

@@ -87,7 +87,9 @@ public class Gui {
 		reader.readProblem(a);
 		String newline = "\n";
 		p.setText(reader.showPrompt());
-		//*** q.setText(reader.showQuestion());
+
+		q.setText(reader.showQuestion());
+
 	}
 
 	private Container createContentPane() {

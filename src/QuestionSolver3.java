@@ -14,9 +14,9 @@ private String[] logicAnswerChoices;
 private String[] textAnswerChoices;
 private ArrayList<QuestionInterface> myQuestions;
 private ArrayList<String[]> allSolutions;
-private ArrayList<Question> finalQs;
+private ArrayList<QuestionFinal> finalQs;
 
-public QuestionSolver3(ProblemSolver ps, FinalQuestion objQA) {
+public QuestionSolver3(ProblemSolver ps, Question objQA) {
 	this.ps = ps;
 	allSolutions = ps.getAllPossibleSolutions();
 	textPrompt = objQA.getQuestionToDisplay();
@@ -30,15 +30,15 @@ public QuestionSolver3(ProblemSolver ps, FinalQuestion objQA) {
 	}
 
 
-public Question doAction(){
-	Question finalQ = null;
+public QuestionFinal doAction(){
+	QuestionFinal finalQ = null;
 //	finalQs = new ArrayList<Question>();
 	for(QuestionInterface q: myQuestions){
 		int answer = q.eval(allSolutions);
 		String prompt = q.getTextPrompt();
 		String[] answerChoices = q.getTextAnswerChoices();
-		finalQ = new Question(prompt, answerChoices, answer);
-		System.out.println("AUTUMN CAT ANSWER: " + answer);
+		finalQ = new QuestionFinal(prompt, answerChoices, answer);
+		System.out.println("Index of the correct answer choice (this index starts at 1) " + answer);
 		//finalQs.add(finalQ);
 	}
 	
@@ -216,5 +216,4 @@ private ArrayList<String[]> getQSolutions(String name, String operator, String v
 
 
 private ArrayList<String[]> qSolutions = new  ArrayList<String[]>();
-private ArrayList<Question> questions = new ArrayList<Question>();
 }

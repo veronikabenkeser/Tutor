@@ -128,8 +128,8 @@ public class Reader {
 
 	// pick out individual questions and a list of answers associated with that question and 
 	public void makeAllQ(){
-		ArrayList<Question> finalQs = new ArrayList<Question>();
-		ArrayList<FinalQuestion> abc = new ArrayList<FinalQuestion>();
+		ArrayList<QuestionFinal> finalQs = new ArrayList<QuestionFinal>();
+		ArrayList<Question> abc = new ArrayList<Question>();
 		String allQText = showQuestion();
 		Pattern pattern = Pattern.compile("(\\d.*)\\n([\\(](.*\\n){5})");
 		Matcher matcher = pattern.matcher(allQText);
@@ -146,23 +146,23 @@ public class Reader {
 			System.out.println("modifiedQuestionToDisplay : "+ modifiedQuestionToDisplay);
 			System.out.println("answerChoicesToDisplay : " + answerChoicesToDisplay);
 			
-			FinalQuestion objQA = new FinalQuestion(questionToDisplay, modifiedQuestionToDisplay, answerChoicesToDisplay, modifiedAnswerChoicesToDisplay);
+			Question objQA = new Question(questionToDisplay, modifiedQuestionToDisplay, answerChoicesToDisplay, modifiedAnswerChoicesToDisplay);
 			abc.add(objQA);
 			System.out.println("STEP1A");
 			
 		}
 		
-		for (FinalQuestion obj: abc){
+		for (Question obj: abc){
 			qs3= new QuestionSolver3(ps, obj);
 			System.out.println("STEP 1C");
 			finalQs.add(qs3.doAction());
 		}
 		
 		System.out.println("Im currently in the Reader's makeAllQs method.");
-		for (Question q: finalQs){
-			System.out.println(" here is the q " + q.getQuestionPrompt());
-			System.out.println(q.getAnswers());
-			System.out.println(q.getAnswerInt());
+		for (QuestionFinal q: finalQs){
+			System.out.println(" here is the q " + q.getPrompt());
+			System.out.println(q.getAnswerChoices());
+			System.out.println(q.getAnswer());
 			
 		}
 
