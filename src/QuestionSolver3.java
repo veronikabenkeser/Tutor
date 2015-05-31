@@ -1,12 +1,17 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class QuestionSolver3 {
+/*
+ * This class calculates the answer to conditional Must Be True questions, goes through the answer choices provided by the
+ * question, and picks out the index of the correct answer choice. It then takes the prompt, answer choices, and the index
+ * of the correct answer to make instances of the QuestionFinal class. 
+ * 
+ */
 
+public class QuestionSolver3 {
 private ProblemSolver ps;
 private String logicPrompt;
 private String textPrompt;
@@ -38,7 +43,7 @@ public QuestionFinal doAction(){
 		String prompt = q.getTextPrompt();
 		String[] answerChoices = q.getTextAnswerChoices();
 		finalQ = new QuestionFinal(prompt, answerChoices, answer);
-		System.out.println("Index of the correct answer choice (this index starts at 1) " + answer);
+		System.out.println("Index of the correct answer choice (this index starts at 1): " + answer);
 		//finalQs.add(finalQ);
 	}
 	
@@ -55,7 +60,7 @@ public void addQuestion(String textPrompt0, String logicPrompt0, String[] textAn
 	final String[] logicAnswerChoices = logicAnswerChoices0;
 	
 	QuestionInterface qu = new QuestionInterface() { // defining and instantiating an inner class at the same time
-		
+		                                            
 		String copyTextPrompt = textPrompt;
 		String copyLogicPrompt =logicPrompt;
 		String[] copyLogicAnswerChoices= logicAnswerChoices;
@@ -71,14 +76,6 @@ public void addQuestion(String textPrompt0, String logicPrompt0, String[] textAn
 			
 			
 			if (copyLogicPrompt.contains("MBT")){
-//				ArrayList<String[]> relScenarios = evalMBT(copyLogicPrompt, copyLogicAnswerChoices, allSolutions);
-//				System.out.println("SCENARIOS" + relScenarios);
-//				// examine relevant scenarios to find a MBT answer choice
-//				answer = findSolution(copyLogicAnswerChoices, relScenarios); // Answer as an int?? 
-//				System.out.println("and here relSc size is " + relScenarios.size());
-//			}
-//			return answer;
-				System.out.println("ABOUT TO PRINT THE ANSWER BELOW>>>");
 				return evalMBT(copyLogicPrompt, copyLogicAnswerChoices, allSolutions);
 			}
 			return -1;
@@ -97,20 +94,6 @@ public void addQuestion(String textPrompt0, String logicPrompt0, String[] textAn
 	myQuestions.add(qu);
 }
 
-//private int findSolution(String[] copyLogicAnswerChoices, ArrayList<String[]> relScenarios) {
-//	int count=1;
-//	for(int i=0; i < copyLogicAnswerChoices.length; i++){
-//		String text = copyLogicAnswerChoices[i];
-//		ArrayList<String[]> result = getAllScenariosThatFitExtraCond(text, relScenarios);
-//		if (result.size() == relScenarios.size()){
-//			System.out.println("prior to result: " + result.size());
-//			System.out.println(relScenarios.size());
-//			return count;
-//		}
-//	}
-//	return -1; //CHANGE THIS.
-//}
-
 public int evalMBT(String copyLogicPrompt, String[] copyLogicAnswerChoices, ArrayList<String[]> allSolutions){
 	System.out.println("Step1 of evalMBT");
 	ArrayList<String[]> allRelScenarios = getAllScenariosThatFitExtraCond(copyLogicPrompt, allSolutions);
@@ -120,7 +103,7 @@ public int evalMBT(String copyLogicPrompt, String[] copyLogicAnswerChoices, Arra
 			return i+1;
 		}
 	}
-	return -1; //CHANGE THIS.
+	return -1; 
 }
 
 private boolean fitsAllScenarios(String text, ArrayList<String[]> allSolutions){
@@ -142,6 +125,11 @@ private boolean fitsAllScenarios(String text, ArrayList<String[]> allSolutions){
 		
 	
 	int intValue= Integer.parseInt(value);
+	
+	if (allSolutions.isEmpty()){
+		return false;
+	}
+	
 	if (operator.equals("==")) {
 		for(String[] s: allSolutions){
 			if(!s[intValue-1].equals(name)){

@@ -6,30 +6,52 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JTextArea;
+import javax.swing.border.Border;
+
+import java.awt.Graphics;
+
 
 public class Gui {
 	final JFrame frame = new JFrame("COACH");
 	private String a;
+	private JButton clearAllBtn, lineBtn, checkBtn, downSlopedLineBtn, upSlopedLineBtn, submitBtn;
 	JTextArea p = new JTextArea();
 	JTextArea q = new JTextArea();
 	// private GUIControl control;
-	private DiagramArea diagramArea = new DiagramArea();
 	private Reader reader;
+	private DiagramArea diagramArea;
+	ActionListener actionListener = new ActionListener(){
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if (e.getSource() == clearAllBtn){
+				diagramArea.clear();
+			} else if (e.getSource() == lineBtn){
+				diagramArea.drawSimpleLine();
+			}
+		}	
+	};
 
 	public Gui(Reader reader) {
-		this.reader = reader;
+		this.reader = reader; 
+		diagramArea = new DiagramArea(reader);
+		
 		a = "P1";
 		loadNewGame(a);
 	}
@@ -79,6 +101,7 @@ public class Gui {
 			JRadioButtonMenuItem source = (JRadioButtonMenuItem)e.getSource();
 			String a = source.getText();
 			loadNewGame(a);
+		
 		}
 	};
 	
@@ -87,9 +110,8 @@ public class Gui {
 		reader.readProblem(a);
 		String newline = "\n";
 		p.setText(reader.showPrompt());
-
 		q.setText(reader.showQuestion());
-
+		diagramArea.updateDiagram();
 	}
 
 	private Container createContentPane() {
@@ -133,6 +155,7 @@ public class Gui {
 
 		contentPane.add(loadQuestion(), c);
 		contentPane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		
 		contentPane.setBackground(Color.BLUE);
 		contentPane.setOpaque(false);
 
@@ -181,11 +204,13 @@ public class Gui {
 
 		GridBagConstraints gbc = new GridBagConstraints();
 		String title = "Master Diagram";
-		diagramArea.setBorder(BorderFactory.createTitledBorder(title));
-
+		//??diagramArea.updateDiagram();
+        diagramArea.setBorder(BorderFactory.createTitledBorder(title));
+        
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		panel1.add(diagramArea, gbc);
+		
 
 		gbc.gridx = 1;
 		gbc.gridy = 0;
@@ -198,18 +223,17 @@ public class Gui {
 	}
 
 	private JPanel createControls() {
-		JButton checkBtn = new JButton("Check Diagram");
-		JButton submitBtn = new JButton("Submit");
-		JButton letterBtn = new JButton("Letter");
-		// letterBtn.addActionListener(actionListener);
-		JButton clearAllBtn = new JButton("Clear All");
-		// clearAllBtn.addActionListener(actionListener);
-		JButton lineBtn = new JButton("-");
-		// lineBtn.addActionListener(actionListener);
-		JButton downSlopedLineBtn = new JButton("/");
-		// downSlopedLineBtn.addActionListener(actionListener);
-		JButton upSlopedLineBtn = new JButton("/");
-		// upSlopedLineBtn.addActionListener(actionListener);
+		checkBtn = new JButton("Check Diagram");
+		checkBtn.addActionListener(actionListener);
+		submitBtn = new JButton("Submit");
+		clearAllBtn = new JButton("Clear All");
+		clearAllBtn.addActionListener(actionListener);
+		lineBtn = new JButton("-");
+		lineBtn.addActionListener(actionListener);
+		downSlopedLineBtn = new JButton("/");
+		downSlopedLineBtn.addActionListener(actionListener);
+		upSlopedLineBtn = new JButton("/");
+		upSlopedLineBtn.addActionListener(actionListener);
 
 		JPanel controls = new JPanel();
 		controls.setPreferredSize(new Dimension(150, 300));
@@ -230,7 +254,7 @@ public class Gui {
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 
-		controls.add(letterBtn, gbc);
+//		controls.add(letterBtn, gbc);
 		// controls.add(Box.createRigidArea(new Dimension (0,5)));
 
 		gbc.gridx = 0;
@@ -262,7 +286,7 @@ public class Gui {
 	public void createAndShowGUI() {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		//Gui t = new Gui();
+		//Gui t = new Gui(reader);
 		frame.setJMenuBar(this.createMenuBar());
 		frame.setContentPane(this.createContentPane());
 		// frame.setSize(new Dimension(1200,800));
