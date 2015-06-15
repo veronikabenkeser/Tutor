@@ -27,12 +27,14 @@ public class DiagramArea extends JComponent implements MouseListener{
 	private int SPACEBETWEENLINES = 25;
 	private int SLOTX = 20;
 	private int SLOTY= 60;
-	private int YMARGIN = 30;
+	private int YMARGIN = 60;
 	private int XMARGIN = 9;
 	private Polygon pol;
 	private ArrayList<Polygon> polList;
 	private int n;
 	private PL popupLetters;
+	private String negation="";
+	private int lastYCoord=0;
 
 	// Image in which we're going to draw
 	//private Image image;
@@ -69,7 +71,9 @@ public class DiagramArea extends JComponent implements MouseListener{
 				String str = l.getStr();
 				int x = l.retX();
 				int y = l.retY();
+				
 				g.drawString(str, x, y);
+				g.drawString(l.getNegation(), x-5, y);
 			}
 		}
 	}
@@ -77,6 +81,7 @@ public class DiagramArea extends JComponent implements MouseListener{
 private void drawSlots(Graphics g){
 	int x = SLOTX;
 	int y= SLOTY;
+	String negation = "";
 	polList= new ArrayList<Polygon>();
 	for(int i=0; i<n; i++){
 			
@@ -98,7 +103,21 @@ private void drawSlots(Graphics g){
 
 	public void clear() {
 		letters.clear();
+		lastYCoord=0;
 		repaint();
+	}
+	
+	public void changeNegation() {
+		if (negation.equals("")){
+			negation = "~";
+		} else {
+			negation ="";
+		}
+		repaint();	
+	}
+	
+	public String getThisNegation(){
+		return negation;
 	}
 
 	public void drawSimpleLine() {
@@ -152,16 +171,23 @@ private void drawSlots(Graphics g){
 		int x;
 		int y;
 		String l;
+		String negation;
+		int initYCoord=85;
+		
 		
 		public PL(ArrayList<String> playerNames){
 			popup = new JPopupMenu();
-			System.out.println("just created  a new diagramArea inside o fPopupLetters");
+			System.out.println("just created  a new diagramArea inside of PopupLetters");
 			
 			for (String s: playerNames){
 				menuItem = new JMenuItem(s);
 				menuItem.addActionListener(this);
 				popup.add(menuItem);
 			}
+			
+			menuItem = new JMenuItem("/");
+			menuItem.addActionListener(this);
+			popup.add(menuItem);
 		}
 
 		public JPopupMenu getNameOfPopup(){
@@ -175,11 +201,26 @@ private void drawSlots(Graphics g){
 
 
 		public void actionPerformed(ActionEvent e){
+			
 			JMenuItem source = (JMenuItem)(e.getSource());
 			System.out.println("pop-upmenu request event detected.");
 			System.out.println("source is " + source);
 			System.out.println(source.getText());
-			letters.add(new Letter(x, y, source.getText()));
+			
+			if (y>SLOTY){
+				if(lastYCoord !=0){
+					y=lastYCoord+10;
+					lastYCoord=y;
+				} else {
+					y=initYCoord;
+					lastYCoord=y;
+				}
+			} else if (y<=SLOTY){
+				y=SLOTY;
+			}
+	
+			letters.add(new Letter(x, y, source.getText(), getThisNegation()));
+			
 			repaint();
 		}
 
@@ -199,11 +240,13 @@ private void drawSlots(Graphics g){
 		int xp;
 		int yp;
 		String l;
+		String negation;
 		
-		public Letter(int x, int y, String l){
+		public Letter(int x, int y, String l, String negation){
 			this.xp=x;
 			this.yp=y;
 			this.l=l;
+			this.negation = negation;
 			
 		}
 
@@ -218,7 +261,12 @@ private void drawSlots(Graphics g){
 		public String getStr() {
 			return l;
 		}
+		
+		public String getNegation(){
+			return negation;
+		}
 	}
 
 	private ArrayList<Letter> letters = new ArrayList<Letter>();
+
 }

@@ -30,7 +30,7 @@ import java.awt.Graphics;
 public class Gui {
 	final JFrame frame = new JFrame("COACH");
 	private String a;
-	private JButton clearAllBtn, lineBtn, checkBtn, downSlopedLineBtn, upSlopedLineBtn, submitBtn;
+	private JButton clearAllBtn, lineBtn, checkBtn, negationOnBtn, disjunctionBtn, submitBtn;
 	JTextArea p = new JTextArea();
 	JTextArea q = new JTextArea();
 	// private GUIControl control;
@@ -44,8 +44,15 @@ public class Gui {
 				diagramArea.clear();
 			} else if (e.getSource() == lineBtn){
 				diagramArea.drawSimpleLine();
-			}
-		}	
+			} else if (e.getSource() == negationOnBtn){
+				if(negationOnBtn.getText().equals("Negation OFF")){
+					negationOnBtn.setText("Negation ON");
+				} else {
+					negationOnBtn.setText("Negation OFF");
+				}
+				diagramArea.changeNegation();
+			}		
+		}
 	};
 
 	public Gui(Reader reader) {
@@ -230,10 +237,10 @@ public class Gui {
 		clearAllBtn.addActionListener(actionListener);
 		lineBtn = new JButton("-");
 		lineBtn.addActionListener(actionListener);
-		downSlopedLineBtn = new JButton("/");
-		downSlopedLineBtn.addActionListener(actionListener);
-		upSlopedLineBtn = new JButton("/");
-		upSlopedLineBtn.addActionListener(actionListener);
+		negationOnBtn = new JButton("Negation OFF");
+		negationOnBtn.addActionListener(actionListener);
+//		disjunctionBtn = new JButton("Disjunction OFF");
+//		disjunctionBtn.addActionListener(actionListener);
 
 		JPanel controls = new JPanel();
 		controls.setPreferredSize(new Dimension(150, 300));
@@ -260,12 +267,12 @@ public class Gui {
 		gbc.gridx = 0;
 		gbc.gridy = 1;
 
-		controls.add(downSlopedLineBtn, gbc);
+		controls.add(negationOnBtn, gbc);
 
-		gbc.gridx = 0;
-		gbc.gridy = 2;
-
-		controls.add(upSlopedLineBtn, gbc);
+//		gbc.gridx = 0;
+//		gbc.gridy = 2;
+//
+//		controls.add(disjunctionBtn, gbc);
 
 		gbc.gridx = 0;
 		gbc.gridy = 3;
